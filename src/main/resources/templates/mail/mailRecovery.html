@@ -1,0 +1,21 @@
+<!DOCTYPE>
+<html lang="">
+<head>
+    <title>mail</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- use the font -->
+</head>
+<body>
+    <div>
+        <h1 style="font-size: 35px; color: #0887ec; font-weight: bold;">Your recovery code is:</h1>
+        <h1 style="font-size: 25px" th:text="${recovery}"></h1>
+        <p style="font-size: 18px">Enter the following page to continue with the recovery of the password:
+            <br/>
+            <a th:href="${url}" th:text="${'URL page: ' + url}"></a>
+        </p>
+        <p style="font-size: 18px;" th:text="${'This code is valid for ' + minutes + ' minutes.'}">sfdsg</p>
+    </div>
+
+</body>
+</html>

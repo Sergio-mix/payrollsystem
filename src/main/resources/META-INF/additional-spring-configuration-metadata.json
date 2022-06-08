@@ -1,0 +1,43 @@
+{
+  "properties": [
+    {
+      "name": "auth.user.time_recovery_code",
+      "type": "java.lang.Integer",
+      "description": "Time in minutes to wait before sending a new recovery code."
+    },
+    {
+      "name": "auth.user.code_length",
+      "type": "java.lang.Integer",
+      "description": "recovery code size."
+    },
+    {
+      "name": "auth.email.credentials.url",
+      "type": "java.lang.String",
+      "description": "URL to send credentials to."
+    },
+    {
+      "name": "auth.email.credentials.subject",
+      "type": "java.lang.String",
+      "description": "mail subject credentials."
+    },
+    {
+      "name": "auth.email.credentials.templete",
+      "type": "java.lang.String",
+      "description": "templete html email credentials."
+    },
+    {
+      "name": "auth.email.recovery_code.templete",
+      "type": "java.lang.String",
+      "description": "templete html email recovery code."
+    },
+    {
+      "name": "auth.email.recovery_code.subject",
+      "type": "java.lang.String",
+      "description": "mail subject recovery code."
+    },
+    {
+      "name": "auth.email.recovery_code.url",
+      "type": "java.lang.String",
+      "description": "URL to send recovery code to."
+    }
+  ] }

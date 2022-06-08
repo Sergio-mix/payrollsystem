@@ -1,0 +1,185 @@
+.bg-color-white {
+    background: #f0f3f6;
+}
+
+.bg-detail-color-main {
+    color: #fff;
+    background: var(--detail-color);
+    background: linear-gradient(to right, var(--detail-color), var(--detail-color));
+}
+
+.bg-color {
+    background: var(--second-color);
+    background: linear-gradient(to right, var(--second-color), var(--second-color));
+}
+
+.bg-color-aux {
+    background: var(--aux-color);
+    color: var(--second-color);
+}
+
+
+.text-color-grey {
+    color: #555353;
+}
+
+.text-color-red {
+    color: #e34444;
+}
+
+.text-color-blue {
+    color: #2196F3;
+}
+
+.text-color-green {
+    color: rgba(11, 206, 74, 0.9);
+}
+
+.text-color-yellow {
+    color: #f9c814;
+}
+
+.text-color-grey-hover-red {
+    color: #555353;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.text-color-grey-hover-red:hover {
+    color: #e34444;
+}
+
+.text-color-grey-hover {
+    color: #555353;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.text-color-grey-hover:hover {
+    color: #000000;
+}
+
+.text-color-grey-hover-white {
+    color: #555353;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.text-color-grey-hover-white:hover {
+    color: #ffffff;
+}
+
+.text-color-:hover {
+    color: #000000;
+}
+
+
+.text-color-grey-hover-aux {
+    color: #555353;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.text-color-grey-hover-aux:hover {
+    color: var(--aux-color);
+}
+
+.font-size-14 {
+    font-size: 14px;
+}
+
+.font-size-16 {
+    font-size: 16px;
+}
+
+.font-size-18 {
+    font-size: 18px;
+}
+
+.font-size-20 {
+    font-size: 20px;
+}
+
+.font-size-25 {
+    font-size: 25px;
+}
+
+.font-size-27 {
+    font-size: 27px;
+}
+
+.font-size-30 {
+    font-size: 30px;
+}
+
+.font-size-35 {
+    font-size: 35px;
+}
+
+.font-size-40 {
+    font-size: 40px;
+}
+
+.font-size-50 {
+    font-size: 50px;
+}
+
+.font-size-80 {
+    font-size: 80px;
+}
+
+.font-size-100 {
+    font-size: 100px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.margin-5 {
+    margin: 5% auto;
+}
+
+.margin-10rem {
+    margin: 10rem auto;
+}
+
+.text-input {
+    width: 100%;
+    padding: 8px 0;
+    margin: 2px 0;
+    display: inline-block;
+    border: none;
+}
+
+.w-30 {
+    width: 30% !important;
+}
+
+.w-90{
+    width: 90% !important;
+}
+
+.w-80{
+    width: 80% !important;
+}
+
+.mt-6{
+    margin-top: 6% !important;
+}
+
+.mt-7{
+    margin-top: 7% !important;
+}
+
+.mh-350{
+    max-height: 350px !important;
+}
+
+.mh-250{
+    max-height: 250px !important;
+}
+
+.hvh-50{
+    height: 50vh;
+}
