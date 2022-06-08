@@ -34,13 +34,13 @@ public class PayrollDynamic implements Serializable {
     private Integer salary = 0;
 
     @Column(name = "support_for", nullable = false)
-    private Integer supportFor;
+    private Integer supportFor = 0;
 
-    @Column(name = "overtime_daytime", nullable = false, length = 80)
-    private Integer overtimeDaytime;
+    @Column(name = "overtime_daytime", nullable = false)
+    private Integer overtimeDaytime = 0;
 
-    @Column(name = "overtime", nullable = false, length = 80)
-    private Integer overtime;
+    @Column(name = "overtime", nullable = false)
+    private Integer overtime = 0;
 
     @Column(name = "commissions", nullable = false)
     private Integer commissions = 0;

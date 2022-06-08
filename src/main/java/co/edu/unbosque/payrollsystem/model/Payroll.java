@@ -31,6 +31,14 @@ public class Payroll implements Serializable {
     @JoinColumn(name = "fk_type_document", nullable = false, referencedColumnName = "id")
     private TypeDocument typeDocument;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "fk_payroll_dynamic", nullable = false, referencedColumnName = "id")
+    private PayrollDynamic payrollDynamic;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "fk_payroll_data", nullable = false, referencedColumnName = "id")
+    private PayrollData payrollData;
+
     @Column(name = "document_number", unique = true, nullable = false, length = 25)
     private String documentNumber;
 
