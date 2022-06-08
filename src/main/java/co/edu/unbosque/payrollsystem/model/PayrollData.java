@@ -40,7 +40,7 @@ public class PayrollData implements Serializable {
     private String nameOfTheContributor;
 
     @Column(name = "date", nullable = false)
-    @DateTimeFormat(pattern = "yyyy-M")
+    @Temporal(TemporalType.DATE)
     private Date date;
 
     @Column(name = "salary", nullable = false)

@@ -40,6 +40,9 @@ public class Payroll implements Serializable {
     @Column(name = "reference", unique = true, nullable = false, length = 50)
     private String reference;
 
+    @Column(name = "request", unique = true, nullable = false, length = 50)
+    private String request;
+
     @JsonIgnore
     @Column(name = "state", nullable = false, length = 1)
     private String state = ACTIVE;
