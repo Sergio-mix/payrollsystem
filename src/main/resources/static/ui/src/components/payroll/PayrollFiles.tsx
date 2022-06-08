@@ -9,6 +9,7 @@ const PayrollFiles = (props) => {
     const FORM_1 = "FORM_1";
     const FORM_2 = "FORM_2";
 
+
     const setContent = (component) => {
         switch (component) {
             case FORM_1:

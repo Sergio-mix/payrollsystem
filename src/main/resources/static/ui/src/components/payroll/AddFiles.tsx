@@ -83,6 +83,7 @@ const AddFiles = (props) => {
         )
     }
 
+
     const next = () => {
         if(props.list.length > 0){
             props.event();
