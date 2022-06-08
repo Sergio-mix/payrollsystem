@@ -26,7 +26,7 @@ public class UserRegisterValidationServiceImpl extends UserValidationServiceImpl
         List<ValidateError> errors;
         errors = new ArrayList<>();
 
-        errors.add(validateName(user.getNames()));
+        errors.add(validateNames(user.getNames()));
         errors.add(validateLastName(user.getLastNames()));
         errors.add(validateCellPhone(user.getCountryCode(), user.getCellPhone()));
         errors.add(validateEmail(user.getEmail()));

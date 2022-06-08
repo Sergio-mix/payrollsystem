@@ -39,8 +39,8 @@ const ProcessFiles = (props) => {
         }
 
         // @ts-ignore
-        const query = async (file) => {
-            await savePayroll(file).then(response => {
+        const query = (file) => {
+            savePayroll(file).then(response => {
                 setResponse(response);
                 return response;
             }).catch(error => {
@@ -52,7 +52,7 @@ const ProcessFiles = (props) => {
         };
 
         useEffect(() => {
-            query(props.file).then(() => null);
+            query(props.file);
             props.cont();
         }, []);
 
@@ -104,7 +104,7 @@ const ProcessFiles = (props) => {
                     <span
                         className={"font-size-18 text-color-grey "}>Processed {contNum} files of {props.list.length}</span>
                     <div className={"mt-4"}>
-                        <span className={"font-size-18 text-color-grey-hover-red"} onClick={()=>{
+                        <span className={"font-size-18 text-color-grey-hover-red"} onClick={() => {
                             contNum === props.list.length ? props.exit() : null
                         }}>Exit</span>
                     </div>

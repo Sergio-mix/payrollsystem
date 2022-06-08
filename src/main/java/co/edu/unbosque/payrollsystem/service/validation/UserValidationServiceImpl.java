@@ -31,7 +31,7 @@ public class UserValidationServiceImpl {
      * @param names the names
      * @return the validate error
      */
-    public ValidateError validateName(final String names) {
+    public ValidateError validateNames(final String names) {
         final var attribute = "names";
         return validation.isNullOrEmpty(names) ? new ValidateError(attribute, "The names is required")
                 : validation.maxLength(names, 25)

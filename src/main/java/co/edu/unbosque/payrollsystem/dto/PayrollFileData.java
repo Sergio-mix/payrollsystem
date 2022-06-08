@@ -36,6 +36,4 @@ public class PayrollFileData {
     private Integer withdrawalBonus;
     private Integer compensation;
     private Integer inability;
-
-
 }

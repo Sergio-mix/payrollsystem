@@ -7,22 +7,21 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
 
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Entity(name = "Payroll")
-@Table(name = "payroll")
-public class Payroll implements Serializable {
+@Entity(name = "Contributor")
+@Table(name = "Contributor")
+public class Contributor implements Serializable {
     public static final String ACTIVE = "A";
 
     public static final String INACTIVE = "I";
 
     @Serial
-    private static final long serialVersionUID = 232314L;
+    private static final long serialVersionUID = 233214L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,21 +31,11 @@ public class Payroll implements Serializable {
     @JoinColumn(name = "fk_type_document", nullable = false, referencedColumnName = "id")
     private TypeDocument typeDocument;
 
-    @Column(name = "document_number", nullable = false, length = 35)
+    @Column(name = "document_number", nullable = false, length = 25)
     private String documentNumber;
 
-    @Column(name = "business_name", nullable = false, length = 25)
-    private String businessName;
-
-    @Column(name = "reference", unique = true, nullable = false, length = 35)
-    private String reference;
-
-    @Column(name = "request", nullable = false, length = 50)
-    private String request;
-
-    @Column(name = "date", unique = true, nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    @Column(name = "name_contributor", nullable = false, length = 100)
+    private String nameOfTheContributor;
 
     @JsonIgnore
     @Column(name = "state", nullable = false, length = 1)
@@ -56,8 +45,8 @@ public class Payroll implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Payroll payroll = (Payroll) o;
-        return id != null && Objects.equals(id, payroll.id);
+        Contributor that = (Contributor) o;
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override

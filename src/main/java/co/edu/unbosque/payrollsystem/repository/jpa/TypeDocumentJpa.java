@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TypeDocumentJpa extends JpaRepository<TypeDocument, Integer> {
 
+    TypeDocument findByName(String name);
 }

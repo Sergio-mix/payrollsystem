@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -30,18 +31,16 @@ public class PayrollData implements Serializable {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "fk_type_document", nullable = false, referencedColumnName = "id")
-    private TypeDocument typeDocument;
+    @JoinColumn(name = "fk_payroll", nullable = false, referencedColumnName = "id")
+    private Payroll payroll;
 
-    @Column(name = "document_number", nullable = false, length = 25)
-    private String documentNumber;
-
-    @Column(name = "name_contributor", nullable = false, length = 80)
-    private String nameOfTheContributor;
+    @ManyToOne
+    @JoinColumn(name = "fk_contributor", nullable = false, referencedColumnName = "id")
+    private Contributor contributor;
 
     @Column(name = "date", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date date;
+    private Date collaboratorDate;
 
     @Column(name = "salary", nullable = false)
     private Integer salary = 0;
@@ -61,6 +60,10 @@ public class PayrollData implements Serializable {
     @Column(name = "date_of_admission", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dateOfAdmission;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "fk_payroll_dynamic", joinColumns = @JoinColumn(referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
+    private List<PayrollDynamic> payrollDynamic;
 
     @JsonIgnore
     @Column(name = "state", nullable = false, length = 1)

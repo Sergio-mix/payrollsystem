@@ -28,7 +28,7 @@ public class UserUpdateValidationServiceImpl extends UserValidationServiceImpl {
         errors = new ArrayList<>();
 
         if (!user.getNames().equals(currentUser.getNames())) {
-            errors.add(validateName(user.getNames()));
+            errors.add(validateNames(user.getNames()));
         }
 
         if (!user.getLastNames().equals(currentUser.getLastNames())) {

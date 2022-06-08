@@ -23,7 +23,7 @@ public class PayrollDynamic implements Serializable {
     public static final String INACTIVE = "I";
 
     @Serial
-    private static final long serialVersionUID = 233214L;
+    private static final long serialVersionUID = 4333214L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,8 +62,6 @@ public class PayrollDynamic implements Serializable {
 
     @Column(name = "inability", nullable = false)
     private Integer inability = 0;
-
-
 
     @JsonIgnore
     @Column(name = "state", nullable = false, length = 1)

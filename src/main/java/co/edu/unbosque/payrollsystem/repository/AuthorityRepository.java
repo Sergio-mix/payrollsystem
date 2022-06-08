@@ -2,11 +2,13 @@ package co.edu.unbosque.payrollsystem.repository;
 
 import co.edu.unbosque.payrollsystem.model.Authority;
 import co.edu.unbosque.payrollsystem.repository.jpa.AuthorityJpa;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Data
 @Repository(value = "AuthorityRepository")
 public class AuthorityRepository {
 
