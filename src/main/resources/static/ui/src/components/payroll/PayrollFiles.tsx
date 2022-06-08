@@ -12,9 +12,13 @@ const PayrollFiles = (props) => {
     const setContent = (component) => {
         switch (component) {
             case FORM_1:
-                return <AddFiles list={fileList} addList={setFileList} event={handleChange}/>;
+                return <AddFiles list={fileList} addList={setFileList} event={handleChange} modal={props.modal}/>;
             case FORM_2:
-                return <ProcessFiles list={fileList} modal={props.modal}/>;
+                return <ProcessFiles list={fileList} modal={props.modal} exit={() => {
+                    setComponent(FORM_1);
+                    setFileList([]);
+                }
+                }/>;
         }
     }
 

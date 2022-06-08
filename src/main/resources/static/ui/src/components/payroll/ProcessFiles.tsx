@@ -6,8 +6,10 @@ import {
     AiOutlineFileExcel
 } from "react-icons/all";
 import {savePayroll} from "../../services/payrollService";
+import {useNavigate} from "react-router-dom";
 
 const ProcessFiles = (props) => {
+    const navigate = useNavigate();
     const [contNum, setContNum] = useState(0);
     let num = 0;
 
@@ -70,7 +72,8 @@ const ProcessFiles = (props) => {
                                             className={"text-color-green"}/> : response.status === 400 ?
                                 <AiOutlineBulb onClick={handleClick}
                                                className={"text-color-yellow"}/> : response.status === 500 ?
-                                    <AiOutlineClose onClick={handleClick} className={"text-color-red"}/> : null :
+                                    <AiOutlineClose onClick={handleClick} className={"text-color-red"}/> :
+                                    <AiOutlineClose className={"text-color-red"}/> :
                         <span className="spinner-border font-size-14 text-color-grey"/>}</div>
                 </div>
             </Fragment>
@@ -100,6 +103,11 @@ const ProcessFiles = (props) => {
                 <div className={"mt-5 text-center"}>
                     <span
                         className={"font-size-18 text-color-grey "}>Processed {contNum} files of {props.list.length}</span>
+                    <div className={"mt-4"}>
+                        <span className={"font-size-18 text-color-grey-hover-red"} onClick={()=>{
+                            contNum === props.list.length ? props.exit() : null
+                        }}>Exit</span>
+                    </div>
                 </div>
             </div>
         </div>

@@ -58,9 +58,11 @@ const AddFiles = (props) => {
             let i = -1;
             let byteUnits = [' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
             do {
-                bytes = bytes / 1024; i++;
+                bytes = bytes / 1024;
+                i++;
             }
-            while (bytes > 1024); return Math.max(bytes, 0.1).toFixed(1) + byteUnits[i];
+            while (bytes > 1024);
+            return Math.max(bytes, 0.1).toFixed(1) + byteUnits[i];
         }
 
         return (
@@ -80,6 +82,17 @@ const AddFiles = (props) => {
             </Fragment>
         )
     }
+
+    const next = () => {
+        if(props.list.length > 0){
+            props.event();
+        }else {
+            props.modal.open(<div>
+                <h1>❕</h1>
+                <p className={"font-size-25 text-color-grey"}>There are no files at this time</p>
+            </div>);
+        }
+    };
 
     return (
         <div className={"form-main form-table box-shadow-main border-radius-main mb-5 effect-main"}>
@@ -110,7 +123,7 @@ const AddFiles = (props) => {
                         Files: {props.list.length}
                     </h1>
                     <button className={"w-20 btn-3-user bg-color-aux border-radius-main-2 box-shadow-main-2"}
-                            onClick={props.event}>Process
+                            onClick={next}>Process
                     </button>
                 </div>
             </div>
