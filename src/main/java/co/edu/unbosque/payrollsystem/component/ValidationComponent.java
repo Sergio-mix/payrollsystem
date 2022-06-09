@@ -104,7 +104,7 @@ public class ValidationComponent {
     }
 
     public boolean isNumber(final Object str) {
-        return str instanceof Number;
+        return !(str instanceof Number);
     }
 
     public boolean isDate(final Object str) {
@@ -122,6 +122,6 @@ public class ValidationComponent {
                 array[indice] = REPLACEMENT.charAt(pos);
             }
         }
-        return Arrays.toString(array);
+        return new String(array);
     }
 }

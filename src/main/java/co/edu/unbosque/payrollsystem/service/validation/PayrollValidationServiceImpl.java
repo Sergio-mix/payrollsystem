@@ -21,7 +21,7 @@ public class PayrollValidationServiceImpl {
     private TypeDocumentRepository typeDocument;
     String[] headersList = {"TIPODEDOCUMENTO", "NUMERO", "RAZONSOCIAL", "REFERENCIA", "SOLICITUD"};
     String[] headersDataList = {"ORDEN", "TIPODOCUMENTO", "NUMERO", "NOMBRECOTIZANTE", "CARGO", "ANO", "MES",
-            "DIAS", "SALARIO", "DIASTRABAJADOS", "DIASINCAPACIDAD","DIASLICENCIA", "TOTALDIAS", "FECHADEINGRESO"};
+            "SALARIO", "DIASTRABAJADOS", "DIASINCAPACIDAD", "DIASLICENCIA", "TOTALDIAS", "FECHADEINGRESO"};
 
     public ValidateError validateTypeDocument(final Object documentType) {
         final var attribute = "typeDocument";
