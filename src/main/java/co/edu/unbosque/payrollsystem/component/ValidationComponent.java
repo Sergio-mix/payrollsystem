@@ -98,7 +98,6 @@ public class ValidationComponent {
         return count >= n;
     }
 
-
     public boolean isString(final Object str) {
         return str instanceof String;
     }

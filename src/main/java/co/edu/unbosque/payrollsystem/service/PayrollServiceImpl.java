@@ -42,19 +42,25 @@ public class PayrollServiceImpl {
 
     public String addPayroll(MultipartFile file) throws PayrollException, IOException {
         StringBuilder result = new StringBuilder();
-        XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-        XSSFSheet sheet = workbook.getSheetAt(0);
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+            XSSFSheet sheet = workbook.getSheetAt(0);
 
-        PayrollFile payrollFile = setPayrollDataDto(sheet);
-        payrollFile.setHeaders(setListHeaders(sheet));
-        payrollFile.setHeadersData(setListHeadersData(sheet));
-        payrollFile.setPayrollFileData(setPayrollFileDataContributor(sheet));
-        System.out.println(payrollFile);
+            PayrollFile payrollFile = setPayrollDataDto(sheet);
+            payrollFile.setHeaders(setListHeaders(sheet));
+            payrollFile.setHeadersData(setListHeadersData(sheet));
+            payrollFile.setPayrollFileData(setPayrollFileDataContributor(sheet));
+            System.out.println(payrollFile);
 
-        payrollValidationDataService.validatePayroll(payrollFile);//validate payroll
+            payrollValidationDataService.validatePayroll(payrollFile);//validate payroll
 
-        result.append("Se ha cargado el archivo correctamente");
+            result.append("Se ha cargado el archivo correctamente");
 
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
         return result.toString();
     }
 

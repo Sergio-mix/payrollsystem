@@ -31,11 +31,14 @@ public class PayrollValidationDataServiceImpl extends PayrollValidationServiceIm
             List<PayrollFileData> listData = payrollFile.getPayrollFileData();
 
             for (PayrollFileData payrollFileData : listData) {
+                System.out.println(payrollFileData);
                 List<ValidateError> errorsData = validateData(payrollFileData);
+                System.out.println(errorsData);
                 if (errorsData.isEmpty()) {
                     listData.remove(payrollFileData);
                 }else {
                     payrollFileData.setValidateErrors(errorsData);
+                    listData.add(payrollFileData);
                 }
             }
 
