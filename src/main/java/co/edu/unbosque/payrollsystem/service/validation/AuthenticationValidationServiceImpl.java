@@ -14,7 +14,6 @@ import java.util.Optional;
  * The type Authentication validation service impl.
  */
 @Service(value = "AuthenticationValidationServiceImpl")
-@Data
 public class AuthenticationValidationServiceImpl extends UserValidationServiceImpl {
 
     public static final String INCORRECT = "Check your credentials the username or password is incorrect 🔒";

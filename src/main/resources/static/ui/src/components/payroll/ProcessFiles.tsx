@@ -33,9 +33,10 @@ const ProcessFiles = (props) => {
         }
 
         const handleClick = () => {
-            props.modal.open(<div>
-                <p className={"font-size-25 text-color-grey"}>{response.data}</p>
-            </div>);
+            // props.modal.open(<div>
+            //     <p className={"font-size-25 text-color-grey"}>{response.data}</p>
+            // </div>);
+            console.log(response.data);
         }
 
         // @ts-ignore
@@ -45,6 +46,9 @@ const ProcessFiles = (props) => {
                 return response;
             }).catch(error => {
                 if (error.response.status === 500) {
+                    setResponse({data: error.response.data, status: error.response.status});
+                }
+                if (error.response.status === 400) {
                     setResponse({data: error.response.data, status: error.response.status});
                 }
                 return error.response;

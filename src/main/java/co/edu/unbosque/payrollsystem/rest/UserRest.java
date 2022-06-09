@@ -21,6 +21,7 @@ import java.util.Optional;
 
 @RestController("UserRest")
 @RequestMapping(value = "/user/api/v1")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserRest {
 
     @Autowired

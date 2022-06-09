@@ -3,6 +3,9 @@ package co.edu.unbosque.payrollsystem.component;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.Date;
+
 @Component
 @Data
 public class ValidationComponent {
@@ -93,5 +96,32 @@ public class ValidationComponent {
         }
 
         return count >= n;
+    }
+
+
+    public boolean isString(final Object str) {
+        return str instanceof String;
+    }
+
+    public boolean isNumber(final Object str) {
+        return str instanceof Number;
+    }
+
+    public boolean isDate(final Object str) {
+        return !(str instanceof Date);
+    }
+
+    public String removeAccents(final String str) {
+        final String ORIGINAL = "ÁáÉéÍíÓóÚúÑñÜü";
+        final String REPLACEMENT = "AaEeIiOoUuNnUu";
+
+        char[] array = str.toCharArray();
+        for (int indice = 0; indice < array.length; indice++) {
+            int pos = ORIGINAL.indexOf(array[indice]);
+            if (pos > -1) {
+                array[indice] = REPLACEMENT.charAt(pos);
+            }
+        }
+        return Arrays.toString(array);
     }
 }

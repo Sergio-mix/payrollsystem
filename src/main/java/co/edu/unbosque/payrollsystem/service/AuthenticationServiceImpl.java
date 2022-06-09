@@ -29,9 +29,6 @@ import java.util.Optional;
 public class AuthenticationServiceImpl {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private DateCalendarComponent dateCalendar;
 
     @Autowired
@@ -76,14 +73,14 @@ public class AuthenticationServiceImpl {
     }
 
     public void resetPassword(final String username, final HttpServletRequest request) {
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = authenticationValidation.getUserRepository().findByUsername(username);
         if (user.isPresent() && user.get().getEnabled()) {
             sendRecoveryCode(user, request);
         }
     }
 
     public String recoverPassword(final String username, final HttpServletRequest request) {
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = authenticationValidation.getUserRepository().findByUsername(username);
         if (user.isPresent() && authenticationValidation.isAdmin(user.get())) {
             sendRecoveryCode(user, request);
         }
@@ -94,14 +91,14 @@ public class AuthenticationServiceImpl {
         if (time != null && time > 0) {
             user.get().setRecoveryCode(code.getRandomString(codeLength));
             user.get().setRecoveryCodeExpiration(dateCalendar.addMinutesCurrentDate(time));
-            user = userRepository.save(user.get());
+            user = authenticationValidation.getUserRepository().save(user.get());
             mailService.sendMailRecoveryCode(user.get().getEmail(), user.get().getUsername(), user.get().getId(), user.get().getRecoveryCode(), request, time);
         }
     }
 
     public RecoveryCodeStatus verificateRecoveryCode(final int id, final String recoveryCode, final String email) {
         RecoveryCodeStatus result;
-        Optional<User> user = userRepository.findById(id);
+        Optional<User> user = authenticationValidation.getUserRepository().findById(id);
         if (user.isEmpty() || !user.get().getEmail().equals(email)) {
             result = new RecoveryCodeStatus(ReplyMessage.EMAIL_INVALID);
         } else {
@@ -124,7 +121,7 @@ public class AuthenticationServiceImpl {
             throw new UserException(validation.getMessage());
         }
 
-        Optional<User> user = userRepository.findById(id);
+        Optional<User> user = authenticationValidation.getUserRepository().findById(id);
         if (user.isEmpty()) {
             result = new RecoveryCodeStatus(ReplyMessage.INVALID_DATA);
         } else {
@@ -141,7 +138,7 @@ public class AuthenticationServiceImpl {
                     user.get().setEnabled(true);
                 }
 
-                user = userRepository.save(user.get());
+                user = authenticationValidation.getUserRepository().save(user.get());
                 result = user.map(value -> new RecoveryCodeStatus(ReplyMessage.PASSWORD_UPDATED, value.getUsername())).orElseGet(()
                         -> new RecoveryCodeStatus(ReplyMessage.PASSWORD_NOT_UPDATED));
             }

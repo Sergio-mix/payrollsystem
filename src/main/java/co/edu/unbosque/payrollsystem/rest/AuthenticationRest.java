@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 
 @RestController(value = "AuthenticationRest")
 @RequestMapping("/auth/api/v1")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthenticationRest {
     @Autowired
     private UserHistoryServiceImpl recordUserService;

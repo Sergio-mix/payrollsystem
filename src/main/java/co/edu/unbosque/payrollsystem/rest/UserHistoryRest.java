@@ -19,6 +19,7 @@ import java.util.Optional;
 
 @RestController(value = "UserHistoryRest")
 @RequestMapping("/record/api/v1")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserHistoryRest {
 
     @Autowired

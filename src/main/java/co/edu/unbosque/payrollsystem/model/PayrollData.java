@@ -38,6 +38,9 @@ public class PayrollData implements Serializable {
     @JoinColumn(name = "fk_contributor", nullable = false, referencedColumnName = "id")
     private Contributor contributor;
 
+    @Column(name = "position", nullable = false, length = 25)
+    private String position;
+
     @Column(name = "date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date collaboratorDate;
@@ -60,10 +63,6 @@ public class PayrollData implements Serializable {
     @Column(name = "date_of_admission", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date dateOfAdmission;
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "fk_payroll_dynamic", joinColumns = @JoinColumn(referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
-    private List<PayrollDynamic> payrollDynamic;
 
     @JsonIgnore
     @Column(name = "state", nullable = false, length = 1)

@@ -25,16 +25,6 @@ public class PayrollsystemApplication {
         SpringApplication.run(PayrollsystemApplication.class, args);
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("*");
-            }
-        };
-    }
-
     @PostConstruct
     public void init() {
         try {

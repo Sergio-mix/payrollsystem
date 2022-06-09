@@ -5,4 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PayrollJpa extends JpaRepository<Payroll, Integer> {
 
+    boolean existsByTypeDocumentNameAndDocumentNumber(String typeDocument, String documentNumber);
+
+    boolean existsByReference(String reference);
 }

@@ -5,9 +5,7 @@ import co.edu.unbosque.payrollsystem.dto.Usernames;
 import co.edu.unbosque.payrollsystem.exception.UserException;
 import co.edu.unbosque.payrollsystem.model.Authority;
 import co.edu.unbosque.payrollsystem.model.User;
-import co.edu.unbosque.payrollsystem.repository.UserRepository;
-import co.edu.unbosque.payrollsystem.service.validation.UserRegisterValidationServiceImpl;
-import co.edu.unbosque.payrollsystem.service.validation.UserUpdateValidationServiceImpl;
+import co.edu.unbosque.payrollsystem.service.validation.UserValidationDataServiceImpl;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,22 +21,13 @@ import java.util.*;
 public class UserServiceImpl {
 
     /**
-     * The User repository.
-     */
-    @Autowired
-    private UserRepository userRepository;
-
-    /**
      * The Date calendar component.
      */
     @Autowired
     private DateCalendarComponent dateCalendar;
 
     @Autowired
-    private UserRegisterValidationServiceImpl validateRegisterUser;
-
-    @Autowired
-    private UserUpdateValidationServiceImpl validateRegisterUpdate;
+    private UserValidationDataServiceImpl userValidation;
 
     /**
      * save user.
@@ -47,7 +36,7 @@ public class UserServiceImpl {
      * @return the user
      */
     public Optional<User> saveUser(User user) throws UserException {
-        validateRegisterUser.validateRegisterUser(user);//validate user
+        userValidation.validateRegisterUser(user);//validate user
         List<Authority> authorities = (List<Authority>) user.getAuthorities();
 
         user.setNames(user.getNames().toUpperCase());
@@ -57,10 +46,10 @@ public class UserServiceImpl {
         user.setEmail(user.getEmail().toLowerCase());
         user.setPasswordExpiration(dateCalendar.addDaysCurrentDate(user.getDaysToExpire()));
 
-        Optional<User> userSaved = userRepository.save(user);//save user
+        Optional<User> userSaved = userValidation.getUserRepository().save(user);//save user
 
         userSaved.get().setAuthorities(authorities);
-        return userRepository.save(userSaved.get());
+        return userValidation.getUserRepository().save(userSaved.get());
     }
 
     /**
@@ -70,7 +59,7 @@ public class UserServiceImpl {
      * @param currentUser    user data current
      */
     public Optional<User> updateUser(User userDataUpdate, User currentUser) throws UserException {
-        validateRegisterUpdate.validateUpdateUser(userDataUpdate, currentUser);//validate user
+        userValidation.validateUpdateUser(userDataUpdate, currentUser);//validate user
         //set data
         currentUser.setUsername(userDataUpdate.getUsername());//set username
         currentUser.setNames(userDataUpdate.getNames().toUpperCase());
@@ -98,7 +87,7 @@ public class UserServiceImpl {
             }
         }
 
-        return userRepository.save(currentUser);
+        return userValidation.getUserRepository().save(currentUser);
     }
 
     /**
@@ -106,7 +95,7 @@ public class UserServiceImpl {
      */
     public List<Usernames> findByUsernames() {
         List<Usernames> users = new ArrayList<>();
-        userRepository.findAll().forEach(user -> {
+        userValidation.getUserRepository().findAll().forEach(user -> {
             users.add(new Usernames(user.getId(), user.getUsername()));
         });
 
@@ -122,7 +111,7 @@ public class UserServiceImpl {
     public Optional<User> statusUser(User user) {
         user.setEnabled(!user.getEnabled());
         user.setState(user.getEnabled() ? User.ACTIVE : User.INACTIVE);
-        return userRepository.save(user);
+        return userValidation.getUserRepository().save(user);
     }
 
     /**
@@ -131,7 +120,7 @@ public class UserServiceImpl {
      * @return the list
      */
     public List<User> findAllUsers() {
-        return userRepository.findAll();
+        return userValidation.getUserRepository().findAll();
     }
 
     /**
@@ -141,6 +130,6 @@ public class UserServiceImpl {
      * @return the user
      */
     public Optional<User> findByIdUser(Integer id) {
-        return userRepository.findById(id);
+        return userValidation.getUserRepository().findById(id);
     }
 }

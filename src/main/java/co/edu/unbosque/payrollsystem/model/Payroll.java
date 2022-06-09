@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -47,6 +48,10 @@ public class Payroll implements Serializable {
     @Column(name = "date", unique = true, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "fk_payroll_data", joinColumns = @JoinColumn(referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
+    private List<PayrollData> PayrollData;
 
     @JsonIgnore
     @Column(name = "state", nullable = false, length = 1)

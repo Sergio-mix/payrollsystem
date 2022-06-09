@@ -29,7 +29,6 @@ public class PayrollDynamic implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
     @Column(name = "salary", nullable = false)
     private Integer salary = 0;
 
