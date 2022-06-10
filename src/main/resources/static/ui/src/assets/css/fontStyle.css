@@ -160,30 +160,34 @@
     width: 30% !important;
 }
 
-.w-90{
+.w-90 {
     width: 90% !important;
 }
 
-.w-80{
+.w-80 {
     width: 80% !important;
 }
 
-.mt-6{
+.mt-6 {
     margin-top: 6% !important;
 }
 
-.mt-7{
+.mt-7 {
     margin-top: 7% !important;
 }
 
-.mh-350{
+.mh-350 {
     max-height: 350px !important;
 }
 
-.mh-250{
+.mh-250 {
     max-height: 250px !important;
 }
 
-.hvh-50{
+.hvh-50 {
     height: 50vh;
+}
+
+.list-style-none {
+    list-style: none;
 }

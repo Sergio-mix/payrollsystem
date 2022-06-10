@@ -8,7 +8,7 @@ import {
 } from "react-icons/all";
 import {savePayroll} from "../../services/payrollService";
 import {useNavigate} from "react-router-dom";
-import {AiFillLock, AiOutlineCaretLeft} from "react-icons/ai";
+import {AiFillFileExcel, AiFillLock, AiFillProfile, AiOutlineCaretLeft, AiOutlineMenuUnfold} from "react-icons/ai";
 
 const ProcessFiles = (props) => {
     const navigate = useNavigate();
@@ -36,10 +36,10 @@ const ProcessFiles = (props) => {
         }
 
         const handleClick200 = () => {
-            props.modal.open(<div>
-                <AiOutlineCheck className={"text-color-green font-size-60"}/>
-                <p className={"font-size-25 text-color-grey"}>{response.data}</p>
-            </div>);
+            props.modal.open(
+                <div>
+                    <span className={"font-size-25 text-color-grey"}><AiOutlineCheck className={"text-color-green font-size-40"}/> {response.data}</span>
+                </div>);
         }
 
         const handleClick401 = () => {
@@ -63,20 +63,30 @@ const ProcessFiles = (props) => {
             }
 
             props.modal.open(<div className={"mb-3"}>
-                <AiOutlineBulb className={"text-color-yellow font-size-60"}/>
+                <h1 className={"font-size-30"}><AiOutlineBulb
+                    className={"text-color-yellow font-size-40"}/> inconsistencies
+                </h1>
                 <p className={"font-size-20 text-color-grey"}>There were inconsistencies in the information in the
                     file</p>
-                <ul>
-                    <li>File format inconsistencies: {response.data.validateErrors.length} </li>
-                    <li>file data inconsistencies: {datainconsistencies} </li>
-                </ul>
+                <div className={"justify-content-center"}>
+                    <div className={""}>
+                        <span className={"font-size-16 box-shadow-main-2 border-radius-main p-2 m-2"}>
+                            <AiFillFileExcel/> File format: {response.data.validateErrors.length} </span>
+                        <span className={"font-size-16 box-shadow-main-2 border-radius-main p-2 m-2"}>
+                            <AiOutlineMenuUnfold/> file data: {datainconsistencies} </span>
+                    </div>
+                    <div className={"mt-4"}>
+                        <span className={"font-size-18"}>You can see in detail the payroll problems here:</span>
+                        <button className={"mt-2"}>Open viewer</button>
+                    </div>
+                </div>
             </div>);
             console.log(response.data);
         }
 
         const handleClick500 = () => {
             props.modal.open(<div>
-                <AiOutlineClose className={"text-color-red font-size-60"}/>
+                <h1 className={"font-size-30"}><AiOutlineClose className={"text-color-red font-size-40"}/> Error</h1>
                 <p className={"font-size-25 text-color-grey"}>{response.data}</p>
             </div>);
         }
@@ -102,7 +112,7 @@ const ProcessFiles = (props) => {
         return (
             <Fragment>
                 <div
-                    className={"d-flex center justify-content-between border-radius-main box-shadow-hover mt-3 ps-2 pe-2 w-100"}>
+                    className={"d-flex center justify-content-between border-radius-main mt-3 ps-2 pe-2 w-100"}>
                     <div className={"center"}>
                         <AiOutlineFileExcel className={"text-color-green font-size-35"}/>
                         <div className={"mt-2 ms-2"}>
