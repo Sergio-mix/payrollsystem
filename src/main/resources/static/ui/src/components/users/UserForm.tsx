@@ -1,7 +1,7 @@
 import Select from "react-select";
 import {Fragment, useEffect, useState} from "react";
 import {Form} from "react-bootstrap";
-import {AiOutlineCaretLeft} from "react-icons/ai";
+import {AiFillLock, AiOutlineCaretLeft} from "react-icons/ai";
 import {getAllCountryCode} from "../../services/countryCodeService";
 import {getAllTypeDocument} from "../../services/typeDocumentService";
 import {getAllAuthority} from "../../services/authorityService";
@@ -67,7 +67,14 @@ const UserForm = (props) => {
                 case 400:
                     return error;
                 case 401:
-                    navigate("/401");
+                    props.modal.openIsCloseNot(<div>
+                        <p className={"font-size-30 text-color-grey"}><AiFillLock/> Expired Session</p>
+                    </div>);
+
+                    setTimeout(() => {
+                        localStorage.clear();
+                        navigate("/login");
+                    }, 2000);
                     break;
                 case 404:
                     navigate("*");

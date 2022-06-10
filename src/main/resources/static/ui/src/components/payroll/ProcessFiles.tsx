@@ -3,10 +3,12 @@ import {
     AiOutlineBulb,
     AiOutlineCheck,
     AiOutlineClose,
-    AiOutlineFileExcel
+    AiOutlineFileExcel,
+    GrSecure
 } from "react-icons/all";
 import {savePayroll} from "../../services/payrollService";
 import {useNavigate} from "react-router-dom";
+import {AiFillLock, AiOutlineCaretLeft} from "react-icons/ai";
 
 const ProcessFiles = (props) => {
     const navigate = useNavigate();
@@ -33,26 +35,66 @@ const ProcessFiles = (props) => {
             return Math.max(bytes, 0.1).toFixed(1) + byteUnits[i];
         }
 
-        const handleClick = () => {
-            // props.modal.open(<div>
-            //     <p className={"font-size-25 text-color-grey"}>{response.data}</p>
-            // </div>);
+        const handleClick200 = () => {
+            props.modal.open(<div>
+                <AiOutlineCheck className={"text-color-green font-size-60"}/>
+                <p className={"font-size-25 text-color-grey"}>{response.data}</p>
+            </div>);
+        }
+
+        const handleClick401 = () => {
+            props.modal.openIsCloseNot(<div>
+                <p className={"font-size-30 text-color-grey"}><AiFillLock/> Expired Session</p>
+            </div>);
+
+            setTimeout(() => {
+                localStorage.clear();
+                navigate("/login");
+            }, 2000);
+        }
+
+        const handleClick400 = () => {
+            let datainconsistencies = 0;
+
+            if (response.data.payrollFileData !== null) {
+                response.data.payrollFileData.map(item => {
+                    datainconsistencies += item.validateErrors.length
+                });
+            }
+
+            props.modal.open(<div className={"mb-3"}>
+                <AiOutlineBulb className={"text-color-yellow font-size-60"}/>
+                <p className={"font-size-20 text-color-grey"}>There were inconsistencies in the information in the
+                    file</p>
+                <ul>
+                    <li>File format inconsistencies: {response.data.validateErrors.length} </li>
+                    <li>file data inconsistencies: {datainconsistencies} </li>
+                </ul>
+            </div>);
             console.log(response.data);
+        }
+
+        const handleClick500 = () => {
+            props.modal.open(<div>
+                <AiOutlineClose className={"text-color-red font-size-60"}/>
+                <p className={"font-size-25 text-color-grey"}>{response.data}</p>
+            </div>);
         }
 
         // @ts-ignore
         const query = (file) => {
             savePayroll(file).then(response => {
                 setResponse(response);
+                props.cont();
             }).catch(error => {
-                setResponse({data: error.response.data, status: error.response.status});
+                setResponse(error.response);
+                props.cont();
             });
         };
 
         useEffect(() => {
             return () => {
                 query(props.file);
-                props.cont();
             }
         }, []);
 
@@ -68,14 +110,24 @@ const ProcessFiles = (props) => {
                             <p className={"font-size-14 text-color-grey "}>{size(props.file.size)}</p>
                         </div>
                     </div>
-                    <div className={"font-size-30"}>{response.status !== null ? response.status === 200 ?
-                            <AiOutlineCheck onClick={handleClick}
-                                            className={"text-color-green cursor-pointer"}/> : response.status === 400 ?
-                                <AiOutlineBulb onClick={handleClick}
-                                               className={"text-color-yellow cursor-pointer"}/> : response.status === 500 ?
-                                    <AiOutlineClose onClick={handleClick} className={"text-color-red cursor-pointer"}/> :
-                                    <AiOutlineClose className={"text-color-red cursor-pointer"}/> :
-                        <span className="spinner-border font-size-14 text-color-grey"/>}</div>
+                    <div className={"font-size-30"}>{
+                        response.status !== null ?
+                            response.status === 200
+                                ? <AiOutlineCheck onClick={handleClick200}
+                                                  className={"text-color-green cursor-pointer"}/>
+                                : response.status === 400
+                                    ? <AiOutlineBulb onClick={handleClick400}
+                                                     className={"text-color-yellow cursor-pointer"}/>
+                                    : response.status === 500
+                                        ? <AiOutlineClose onClick={handleClick500}
+                                                          className={"text-color-red cursor-pointer"}/>
+                                        : response.status === 401
+                                            ? <AiFillLock onClick={handleClick401}
+                                                          className={"text-color-grey cursor-pointer"}/>
+                                            : <AiOutlineClose onClick={handleClick500}
+                                                              className={"text-color-red cursor-pointer"}/>
+                            : <span className="spinner-border font-size-14 text-color-grey"/>}
+                    </div>
                 </div>
             </Fragment>
         )
@@ -110,11 +162,16 @@ const ProcessFiles = (props) => {
                 <div className={"mt-5 text-center"}>
                     <span
                         className={"font-size-18 text-color-grey "}>Processed {contNum} files of {props.list.length}</span>
-                    <div className={"mt-4"}>
-                        <span className={"font-size-18 text-color-grey-hover-red"} onClick={() => {
-                            contNum === props.list.length ? props.exit() : null
-                        }}>Exit</span>
-                    </div>
+                </div>
+                <div className={"mt-4"}>
+                    <span onClick={() => {
+                        contNum === props.list.length ? props.exit() : props.modal.open(<div>
+                            <h1>❕</h1>
+                            <p className={"font-size-25 text-color-grey"}>Processing files</p>
+                        </div>);
+                    }}
+                          className={"font-size-18 text-color-grey-hover-aux cursor-pointer"}>
+                <AiOutlineCaretLeft/> back</span>
                 </div>
             </div>
         </div>

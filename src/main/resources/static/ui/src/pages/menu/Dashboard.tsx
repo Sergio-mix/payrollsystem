@@ -1,7 +1,7 @@
 import {useState, useEffect, Fragment} from "react";
 import {useLocation, useNavigate} from 'react-router-dom';
 import Menu from "../../components/menu/Menu";
-import {AiOutlineBarChart, AiOutlineTeam, AiOutlineCalendar} from "react-icons/ai";
+import {AiOutlineBarChart, AiOutlineTeam, AiOutlineCalendar, AiFillLock} from "react-icons/ai";
 import {SiMicrosoftexcel} from "react-icons/si";
 import {MdCloudCircle} from "react-icons/md";
 import Users from "../../components/users/Users";
@@ -17,7 +17,6 @@ import PayrollFiles from "../../components/payroll/PayrollFiles";
  * @description Dashboard page
  */
 const Dashboard = () => {
-
     const [component, setComponent] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
@@ -44,6 +43,17 @@ const Dashboard = () => {
         setContentModal(null);
     }
 
+    function error401() {
+        modal.openIsCloseNot(<div>
+            <p className={"font-size-30 text-color-grey"}><AiFillLock/> Expired Session</p>
+        </div>);
+
+        setTimeout(() => {
+            localStorage.clear();
+            navigate("/login");
+        }, 2000);
+    }
+
     /**
      * @description user by id
      */
@@ -52,8 +62,7 @@ const Dashboard = () => {
     }).catch(error => {
         switch (error.response.status) {
             case 401:
-                localStorage.clear();
-                navigate("/401");
+                error401();
                 break;
             case 404:
                 navigate("*");
@@ -62,8 +71,7 @@ const Dashboard = () => {
                 navigate("500");
                 break;
             case 0:
-                localStorage.clear();
-                navigate("/");
+                error401();
                 break;
         }
     });
@@ -162,8 +170,7 @@ const Dashboard = () => {
             }, 1500);
         }).catch(error => {
             if (error.response.status === 401) {
-                localStorage.clear();
-                navigate("/login");
+                error401();
             }
         });
     }, []);

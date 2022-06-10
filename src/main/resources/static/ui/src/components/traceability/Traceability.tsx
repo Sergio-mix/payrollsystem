@@ -5,7 +5,7 @@ import {
     getTraceabilityByUserUserId
 } from "../../services/TraceabilityService";
 import Select from "react-select";
-import {AiOutlineSearch} from "react-icons/ai";
+import {AiFillLock, AiOutlineSearch} from "react-icons/ai";
 import {getUsersAllNames} from "../../services/userService";
 import {useNavigate} from "react-router-dom";
 
@@ -55,7 +55,14 @@ const Traceability = (props) => {
                         className={"text-center font-size-25"}>{error.response.data}</p>);
                     break;
                 case 401:
-                    navigate("/401");
+                    props.modal.openIsCloseNot(<div>
+                        <p className={"font-size-30 text-color-grey"}><AiFillLock/> Expired Session</p>
+                    </div>);
+
+                    setTimeout(() => {
+                        localStorage.clear();
+                        navigate("/login");
+                    }, 2000);
                     break;
                 case 404:
                     navigate("*");

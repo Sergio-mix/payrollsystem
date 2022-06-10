@@ -1,9 +1,10 @@
 import {Fragment, useEffect, useState} from "react";
 import {enableUser, getUsersAll} from "../../services/userService";
 import {MDBDataTableV5} from 'mdbreact';
-import {AiOutlineReload} from "react-icons/ai";
+import {AiFillLock, AiOutlineReload} from "react-icons/ai";
 import UserForm from "./UserForm";
 import {useNavigate} from "react-router-dom";
+import {RiShieldUserFill} from "react-icons/all";
 
 /**
  * @description Component that displays the list of users
@@ -83,13 +84,27 @@ const Users = (props) => {
                 });
 
                 props.modal.open(
-                    <div>
-                        <h1>Status update</h1>
-                        <p className={"font-size-25 text-color-grey"}>{rest.data.message}</p>
+                    <div className={"mb-3"}>
+                        <div className={"text-center"}>
+                            <RiShieldUserFill
+                                className={(rest.data.message == "User enabled" ? "text-color-aux" : "text-color-red") + " font-size-60"}/>
+                        </div>
+                        <span className={"font-size-25 text-color-grey"}>{rest.data.message}</span>
                     </div>
                 );
             }
         }).catch(err => {
+            if (err.response.status === 401) {
+                props.modal.openIsCloseNot(<div>
+                    <p className={"font-size-30 text-color-grey"}><AiFillLock/> Expired Session</p>
+                </div>);
+
+                setTimeout(() => {
+                    localStorage.clear();
+                    navigate("/login");
+                }, 2000);
+            }
+
             props.modal.open(
                 <div>
                     <h1 className={"text-color-red"}>:(</h1>
@@ -108,7 +123,14 @@ const Users = (props) => {
         }).catch(error => {
             switch (error.response.status) {
                 case 401:
-                    navigate("/401");
+                    props.modal.openIsCloseNot(<div>
+                        <p className={"font-size-30 text-color-grey"}><AiFillLock/> Expired Session</p>
+                    </div>);
+
+                    setTimeout(() => {
+                        localStorage.clear();
+                        navigate("/login");
+                    }, 2000);
                     break;
                 case 404:
                     navigate("*");
@@ -143,7 +165,9 @@ const Users = (props) => {
             onClick={ev => {
                 userDisabled(user.id), props.modal.openIsCloseNot(
                     <div>
-                        <h1>Status update</h1>
+                        <div className={"text-center"}>
+                            <RiShieldUserFill className={"text-color-grey font-size-60"}/>
+                        </div>
                         {load}
                     </div>
                 );
