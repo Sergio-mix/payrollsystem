@@ -29,7 +29,7 @@ public class UserHistoryRest {
     private UserServiceImpl userServiceImpl;
 
     @Autowired
-    private DateCalendarComponent dateCalendarComponent;
+    private DateCalendarComponent dateCalendar;
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllRecord(final Principal userLogin, final HttpServletRequest request) {
@@ -48,10 +48,10 @@ public class UserHistoryRest {
     public ResponseEntity<?> getAllRecordByDate(final @PathVariable("beginning") String beginning, final @PathVariable("finalDate") String finalDate, final Principal userLogin, final HttpServletRequest request) {
         ResponseEntity<?> response;
         try {
-            Date date1 = dateCalendarComponent.dateFormat("yy-MM-dd HH:mm:ss", beginning);
-            Date date2 = dateCalendarComponent.dateFormat("yy-MM-dd HH:mm:ss", finalDate);
+            Date date1 = dateCalendar.dateFormat("yy-MM-dd HH:mm:ss", beginning);
+            Date date2 = dateCalendar.dateFormat("yy-MM-dd HH:mm:ss", finalDate);
 
-            if (date1.after(date2) || !date2.before(dateCalendarComponent.date())) {
+            if (date1.after(date2) || !date2.before(dateCalendar.getDate())) {
                 response = new ResponseEntity<>(ReplyMessage.BEGINNING_BEFORE_FINAL, HttpStatus.BAD_REQUEST);
             } else {
                 List<UserHistory> recordUserList = userHistoryServiceImpl.findAllDate(date1, date2);
@@ -76,10 +76,10 @@ public class UserHistoryRest {
                 if (user.isEmpty()) {
                     response = new ResponseEntity<>(ReplyMessage.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
                 } else {
-                    Date date1 = dateCalendarComponent.dateFormat("yy-MM-dd HH:mm:ss", beginning);
-                    Date date2 = dateCalendarComponent.dateFormat("yy-MM-dd HH:mm:ss", finalDate);
+                    Date date1 = dateCalendar.dateFormat("yy-MM-dd HH:mm:ss", beginning);
+                    Date date2 = dateCalendar.dateFormat("yy-MM-dd HH:mm:ss", finalDate);
 
-                    if (date1.after(date2) || !date2.before(dateCalendarComponent.date())) {
+                    if (date1.after(date2) || !date2.before(dateCalendar.getDate())) {
                         response = new ResponseEntity<>(ReplyMessage.BEGINNING_BEFORE_FINAL, HttpStatus.BAD_REQUEST);
                     } else {
                         List<UserHistory> recordUserList = userHistoryServiceImpl.findAllDateAndUserId(date1, date2, id);

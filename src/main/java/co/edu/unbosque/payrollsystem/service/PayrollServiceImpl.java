@@ -1,5 +1,6 @@
 package co.edu.unbosque.payrollsystem.service;
 
+import co.edu.unbosque.payrollsystem.component.DateCalendarComponent;
 import co.edu.unbosque.payrollsystem.component.ExcelComponent;
 import co.edu.unbosque.payrollsystem.dto.PayrollFile;
 import co.edu.unbosque.payrollsystem.dto.PayrollFileData;
@@ -20,124 +21,121 @@ import java.util.stream.IntStream;
 @Service(value = "payrollService")
 public class PayrollServiceImpl {
     @Autowired
-    private PayrollDynamicRepository payrollDynamicRepository;
-
-    @Autowired
     private PayrollDataRepository payrollDataRepository;
 
     @Autowired
-    private PayrollRepository payrollRepository;
+    private DateCalendarComponent dateCalendar;
 
     @Autowired
     private ContributorRepository contributorRepository;
 
     @Autowired
-    private TypeDocumentRepository typeDocumentRepository;
-
-    @Autowired
-    private PayrollValidationDataServiceImpl payrollValidationDataService;
+    private PayrollValidationDataServiceImpl payrollValidation;
 
     @Autowired
     private ExcelComponent excelComponent;
 
-    public String addPayroll(MultipartFile file) throws PayrollException, IOException {
-        StringBuilder result = new StringBuilder();
-        try {
-            XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-            XSSFSheet sheet = workbook.getSheetAt(0);
+    public Optional<Payroll> addPayroll(MultipartFile file) throws PayrollException, IOException {
+        XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+        XSSFSheet sheet = workbook.getSheetAt(0);
 
-            PayrollFile payrollFile = setPayrollDataDto(sheet);
-            payrollFile.setHeaders(setListHeaders(sheet));
-            payrollFile.setHeadersData(setListHeadersData(sheet));
-            payrollFile.setPayrollFileData(setPayrollFileDataContributor(sheet));
-            System.out.println(payrollFile);
+        List<PayrollFileData> setPayrollFileDataDto = setPayrollFileDataDto(sheet);
 
-            payrollValidationDataService.validatePayroll(payrollFile);//validate payroll
+        PayrollFile payrollFile = setPayrollDataDto(sheet);
+        payrollFile.setHeaders(setListHeadersDto(sheet));
+        payrollFile.setHeadersData(setListHeadersDataDto(sheet));
+        payrollFile.setPayrollFileData(setPayrollFileDataDto);
 
-            result.append("Se ha cargado el archivo correctamente");
+        payrollValidation.validatePayroll(payrollFile);//validate payroll
 
+        Optional<Payroll> payroll = createPayroll(payrollFile.getTypeDocument(), payrollFile.getDocumentNumber(),
+                payrollFile.getBusinessName(), payrollFile.getReference(), payrollFile.getRequest());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+        List<PayrollData> listPayrollData = new ArrayList<>();
+        for (PayrollFileData data : setPayrollFileDataDto) {
+            Optional<Contributor> contributor = creteContributor(data.getNameOfTheContributor(), data.getTypeDocument(), data.getDocumentNumber().toString());
+            Optional<PayrollData> payrollData = createPayrollData(payroll.get(), contributor.get(), data.getPosition(), new Date(), data.getSalary(), data.getWorkedDays(),
+                    data.getDaysOfDisability(), data.getLeaveDays(), data.getTotalDays(), data.getDateOfAdmission());
+            listPayrollData.add(payrollData.get());
         }
-        return result.toString();
+
+        payroll.get().setPayrollData(listPayrollData);
+        return payrollValidation.getPayroll().save(payroll.get());
     }
 
     private PayrollFile setPayrollDataDto(final XSSFSheet sheet) {
         PayrollFile payrollFile = new PayrollFile();
-        payrollFile.setTypeDocument(excelComponent.formatParse(sheet.getRow(3).getCell(1)));
-        payrollFile.setDocumentNumber(excelComponent.formatParse(sheet.getRow(3).getCell(2)));
-        payrollFile.setBusinessName(excelComponent.formatParse(sheet.getRow(3).getCell(3)));
-        payrollFile.setReference(excelComponent.formatParse(sheet.getRow(3).getCell(4)));
-        payrollFile.setRequest(excelComponent.formatParse(sheet.getRow(3).getCell(5)));
+        payrollFile.setTypeDocument(excelComponent.formatParseString(sheet.getRow(3).getCell(1)));
+        payrollFile.setDocumentNumber(excelComponent.formatParseInteger(sheet.getRow(3).getCell(2)));
+        payrollFile.setBusinessName(excelComponent.formatParseString(sheet.getRow(3).getCell(3)));
+        payrollFile.setReference(excelComponent.formatParseInteger(sheet.getRow(3).getCell(4)));
+        payrollFile.setRequest(excelComponent.formatParseString(sheet.getRow(3).getCell(5)));
         return payrollFile;
     }
 
-    private List<Object> setListHeaders(final XSSFSheet sheet) {
-        List<Object> headers = new ArrayList<>();
+    private List<String> setListHeadersDto(final XSSFSheet sheet) {
+        List<String> headers = new ArrayList<>();
         sheet.getRow(2).forEach(cell -> {
             if (cell.getColumnIndex() > 0 && cell.getColumnIndex() < 6) {
-                headers.add(excelComponent.formatParse(sheet.getRow(2).getCell(cell.getColumnIndex())));
+                headers.add(excelComponent.formatParseString(sheet.getRow(2).getCell(cell.getColumnIndex())));
             }
         });
-
         return headers;
     }
 
-    private List<Object> setListHeadersData(final XSSFSheet sheet) {
-        List<Object> headersData = new ArrayList<>();
+    private List<String> setListHeadersDataDto(final XSSFSheet sheet) {
+        List<String> headersData = new ArrayList<>();
         sheet.getRow(5).forEach(cell -> {
             if (cell.getColumnIndex() < 13) {
-                headersData.add(excelComponent.formatParse(sheet.getRow(5).getCell(cell.getColumnIndex())));
+                headersData.add(excelComponent.formatParseString(sheet.getRow(5).getCell(cell.getColumnIndex())));
             }
         });
-
         return headersData;
     }
 
-    private List<PayrollFileData> setPayrollFileDataContributor(final XSSFSheet sheet) {
-        List<PayrollFileData> listContributor = new ArrayList<>();
+    private List<PayrollFileData> setPayrollFileDataDto(final XSSFSheet sheet) {
+        List<PayrollFileData> listOrder = new ArrayList<>();
         IntStream.range(6, sheet.getPhysicalNumberOfRows() + 3).mapToObj(sheet::getRow).forEach(rowListContributor -> {
-            PayrollFileData contributor = new PayrollFileData();
-            contributor.setOrder(excelComponent.formatParse(rowListContributor.getCell(0)));
-            contributor.setTypeDocument(excelComponent.formatParse(rowListContributor.getCell(1)));
-            contributor.setDocumentNumber(excelComponent.formatParse(rowListContributor.getCell(2)));
-            contributor.setNameOfTheContributor(excelComponent.formatParse(rowListContributor.getCell(3)));
-            contributor.setPosition(excelComponent.formatParse(rowListContributor.getCell(4)));
-            contributor.setYear(excelComponent.formatParse(rowListContributor.getCell(5)));
-            contributor.setMonth(excelComponent.formatParse(rowListContributor.getCell(6)));
-            contributor.setSalary(excelComponent.formatParse(rowListContributor.getCell(7)));
-            contributor.setWorkedDays(excelComponent.formatParse(rowListContributor.getCell(8)));
-            contributor.setDaysOfDisability(excelComponent.formatParse(rowListContributor.getCell(9)));
-            contributor.setLeaveDays(excelComponent.formatParse(rowListContributor.getCell(10)));
-            contributor.setTotalDays(excelComponent.formatParse(rowListContributor.getCell(11)));
-            contributor.setDateOfAdmission(excelComponent.formatParse(rowListContributor.getCell(12)));
-            listContributor.add(contributor);
+            PayrollFileData order = new PayrollFileData();
+            order.setOrder(excelComponent.formatParseInteger(rowListContributor.getCell(0)));
+            order.setTypeDocument(excelComponent.formatParseString(rowListContributor.getCell(1)));
+            order.setDocumentNumber(excelComponent.formatParseInteger(rowListContributor.getCell(2)));
+            order.setNameOfTheContributor(excelComponent.formatParseString(rowListContributor.getCell(3)));
+            order.setPosition(excelComponent.formatParseString(rowListContributor.getCell(4)));
+            order.setYear(excelComponent.formatParseInteger(rowListContributor.getCell(5)));
+            order.setMonth(excelComponent.formatParseInteger(rowListContributor.getCell(6)));
+            order.setSalary(excelComponent.formatParseInteger(rowListContributor.getCell(7)));
+            order.setWorkedDays(excelComponent.formatParseInteger(rowListContributor.getCell(8)));
+            order.setDaysOfDisability(excelComponent.formatParseInteger(rowListContributor.getCell(9)));
+            order.setLeaveDays(excelComponent.formatParseInteger(rowListContributor.getCell(10)));
+            order.setTotalDays(excelComponent.formatParseInteger(rowListContributor.getCell(11)));
+            order.setDateOfAdmission(excelComponent.formatParseDate(rowListContributor.getCell(12)));
+            listOrder.add(order);
         });
-        return listContributor;
+        return listOrder;
     }
 
-    private Optional<Payroll> createPayroll(String typeDocument, String documentNumber,
-                                            String businessName, String reference,
-                                            String request, List<PayrollData> payrollDataList) {
+    private Optional<Payroll> createPayroll(String typeDocument, Integer documentNumber,
+                                            String businessName, Integer reference,
+                                            String request) {
         Payroll payroll = new Payroll();
-        payroll.setTypeDocument(typeDocumentRepository.findByName(typeDocument).get());
-        payroll.setDocumentNumber(documentNumber);
-        payroll.setBusinessName(businessName);
-        payroll.setReference(reference);
-        payroll.setRequest(request);
-        payroll.setDate(new Date());
-        payroll.setPayrollData(payrollDataList);
-        return payrollRepository.save(payroll);
+        payroll.setTypeDocument(payrollValidation.getTypeDocument().findByName(typeDocument.toUpperCase()).get());
+        payroll.setDocumentNumber(documentNumber.toString());
+        payroll.setBusinessName(businessName.toUpperCase());
+        payroll.setReference(reference.toString());
+        payroll.setRequest(request.toUpperCase());
+        payroll.setPayrollData(null);
+        payroll.setDate(dateCalendar.getDate());
+        return payrollValidation.getPayroll().save(payroll);
     }
 
     private Optional<PayrollData> createPayrollData(Payroll payroll, Contributor contributor,
-                                                    Date collaboratorDate, Integer salary,
+                                                    String position, Date collaboratorDate, Integer salary,
                                                     Integer workedDays, Integer daysOfDisability,
                                                     Integer leaveDays, Integer totalDays, Date dateOfAdmission) {
         PayrollData payrollData = new PayrollData();
         payrollData.setPayroll(payroll);
+        payrollData.setPosition(position.toUpperCase());
         payrollData.setContributor(contributor);
         payrollData.setCollaboratorDate(collaboratorDate);
         payrollData.setSalary(salary);
@@ -150,19 +148,13 @@ public class PayrollServiceImpl {
     }
 
     private Optional<Contributor> creteContributor(String name, String typeDocument, String documentNumber) {
-        Optional<Contributor> result;
-        Optional<TypeDocument> typeDocumentOptional = typeDocumentRepository.findByName(typeDocument.toUpperCase());
+        Optional<TypeDocument> typeDocumentOptional = payrollValidation.getTypeDocument().findByName(typeDocument.toUpperCase());
         Optional<Contributor> contributor = contributorRepository.existsContributor(typeDocumentOptional.get(), documentNumber);
         if (contributor.isEmpty()) {
-            Contributor createdContributor = new Contributor();
-            createdContributor.setNameOfTheContributor(name.toUpperCase());
-            createdContributor.setTypeDocument(typeDocumentOptional.get());
-            createdContributor.setDocumentNumber(documentNumber);
-            result = contributorRepository.save(createdContributor);
-        } else {
-            result = contributor;
+            contributor = contributorRepository.save(new Contributor(typeDocumentOptional.get(), documentNumber, name.toUpperCase()));
         }
-        return result;
+
+        return contributor;
     }
 
 }

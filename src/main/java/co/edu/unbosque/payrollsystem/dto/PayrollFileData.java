@@ -2,23 +2,24 @@ package co.edu.unbosque.payrollsystem.dto;
 
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
 public class PayrollFileData {
-    private Object order;
-    private Object typeDocument;
-    private Object documentNumber;
-    private Object nameOfTheContributor;
-    private Object position;
-    private Object year;
-    private Object month;
-    private Object salary;
-    private Object workedDays;
-    private Object daysOfDisability;
-    private Object leaveDays;
-    private Object totalDays;
-    private Object dateOfAdmission;
+    private Integer order;
+    private String typeDocument;
+    private Integer documentNumber;
+    private String nameOfTheContributor;
+    private String position;
+    private Integer year;
+    private Integer month;
+    private Integer salary;
+    private Integer workedDays;
+    private Integer daysOfDisability;
+    private Integer leaveDays;
+    private Integer totalDays;
+    private Date dateOfAdmission;
 
     private List<ValidateError> validateErrors;
 //    private Object minimumWage;

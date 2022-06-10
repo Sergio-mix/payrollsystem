@@ -11,6 +11,7 @@ import {useNavigate} from "react-router-dom";
 const ProcessFiles = (props) => {
     const navigate = useNavigate();
     const [contNum, setContNum] = useState(0);
+    const [items, setItems] = useState(null);
     let num = 0;
 
     function setCont() {
@@ -43,22 +44,18 @@ const ProcessFiles = (props) => {
         const query = (file) => {
             savePayroll(file).then(response => {
                 setResponse(response);
-                return response;
             }).catch(error => {
-                if (error.response.status === 500) {
-                    setResponse({data: error.response.data, status: error.response.status});
-                }
-                if (error.response.status === 400) {
-                    setResponse({data: error.response.data, status: error.response.status});
-                }
-                return error.response;
+                setResponse({data: error.response.data, status: error.response.status});
             });
         };
 
         useEffect(() => {
-            query(props.file);
-            props.cont();
+            return () => {
+                query(props.file);
+                props.cont();
+            }
         }, []);
+
 
         return (
             <Fragment>
@@ -73,11 +70,11 @@ const ProcessFiles = (props) => {
                     </div>
                     <div className={"font-size-30"}>{response.status !== null ? response.status === 200 ?
                             <AiOutlineCheck onClick={handleClick}
-                                            className={"text-color-green"}/> : response.status === 400 ?
+                                            className={"text-color-green cursor-pointer"}/> : response.status === 400 ?
                                 <AiOutlineBulb onClick={handleClick}
-                                               className={"text-color-yellow"}/> : response.status === 500 ?
-                                    <AiOutlineClose onClick={handleClick} className={"text-color-red"}/> :
-                                    <AiOutlineClose className={"text-color-red"}/> :
+                                               className={"text-color-yellow cursor-pointer"}/> : response.status === 500 ?
+                                    <AiOutlineClose onClick={handleClick} className={"text-color-red cursor-pointer"}/> :
+                                    <AiOutlineClose className={"text-color-red cursor-pointer"}/> :
                         <span className="spinner-border font-size-14 text-color-grey"/>}</div>
                 </div>
             </Fragment>
@@ -96,6 +93,12 @@ const ProcessFiles = (props) => {
         }
     }
 
+    useEffect(() => {
+        return () => {
+            setItems(listItems(props.list));
+        }
+    }, []);
+
     return (
         <div className={"form-main form-first box-shadow-main border-radius-main mb-5 effect-main"}>
             <h1 className={"text-center"}>Process payroll</h1>
@@ -103,7 +106,7 @@ const ProcessFiles = (props) => {
                 <p className={"font-size-18 text-color-grey mb-2 text-center"}>We are processing payroll please
                     don't
                     leave the page</p>
-                {listItems(props.list)}
+                {items}
                 <div className={"mt-5 text-center"}>
                     <span
                         className={"font-size-18 text-color-grey "}>Processed {contNum} files of {props.list.length}</span>

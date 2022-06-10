@@ -1,6 +1,7 @@
 package co.edu.unbosque.payrollsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -45,13 +46,14 @@ public class Payroll implements Serializable {
     @Column(name = "request", nullable = false, length = 50)
     private String request;
 
-    @Column(name = "date", unique = true, nullable = false)
+    @Column(name = "date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"payroll"})
     @JoinTable(name = "fk_payroll_data", joinColumns = @JoinColumn(referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
-    private List<PayrollData> PayrollData;
+    private List<PayrollData> payrollData;
 
     @JsonIgnore
     @Column(name = "state", nullable = false, length = 1)

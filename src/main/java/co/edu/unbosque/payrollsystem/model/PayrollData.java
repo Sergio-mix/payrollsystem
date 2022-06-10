@@ -1,6 +1,7 @@
 package co.edu.unbosque.payrollsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -31,6 +32,7 @@ public class PayrollData implements Serializable {
     private Integer id;
 
     @ManyToOne
+    @JsonIgnoreProperties({"payrollData", "state"})
     @JoinColumn(name = "fk_payroll", nullable = false, referencedColumnName = "id")
     private Payroll payroll;
 

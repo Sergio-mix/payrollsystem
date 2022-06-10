@@ -53,7 +53,7 @@ public class DateCalendarComponent {
      *
      * @return date
      */
-    public Date date() {
+    public Date getDate() {
         return new Date();
     }
 
@@ -68,4 +68,5 @@ public class DateCalendarComponent {
     public Date dateFormat(final String format, final String date) throws ParseException {
         return new SimpleDateFormat(format).parse(date);
     }
+
 }

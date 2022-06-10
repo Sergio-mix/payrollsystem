@@ -14,47 +14,46 @@ import java.util.Objects;
 public class PayrollValidationDataServiceImpl extends PayrollValidationServiceImpl {
 
     public void validatePayroll(final PayrollFile payrollFile) throws PayrollException {
-        boolean isValid = true;
+        PayrollFile payroll = payrollFile;
         List<ValidateError> errors = new ArrayList<>();
 
-        errors.add(validateTypeDocument(payrollFile.getTypeDocument()));
-        errors.add(validateDocumentNumber(payrollFile.getDocumentNumber()));
-        errors.add(validateBusinessName(payrollFile.getBusinessName()));
-        errors.add(validateReference(payrollFile.getReference()));
-        errors.add(validateRequest(payrollFile.getRequest()));
-        errors.add(validateHeaders(payrollFile.getHeaders()));
-        errors.add(validateHeadersData(payrollFile.getHeadersData()));
+        ValidateError validateTypeDocument = validateTypeDocument(payroll.getTypeDocument());
+        ValidateError validateDocumentNumber = validateDocumentNumber(payroll.getDocumentNumber());
+
+        if (validateTypeDocument == null && validateDocumentNumber == null) {
+            errors.add(validateDocumentCompany(payroll.getTypeDocument(), payroll.getDocumentNumber()));
+        }
+
+        errors.add(validateTypeDocument);
+        errors.add(validateDocumentNumber);
+        errors.add(validateBusinessName(payroll.getBusinessName()));
+        errors.add(validateReference(payroll.getReference()));
+        errors.add(validateRequest(payroll.getRequest()));
+        errors.add(validateHeaders(payroll.getHeaders()));
+        errors.add(validateHeadersData(payroll.getHeadersData()));
         errors.removeIf(Objects::isNull);
-        payrollFile.setValidateErrors(errors);
+        payroll.setValidateErrors(errors);
 
-        if (payrollFile.getValidateErrors().isEmpty()) {
-            List<PayrollFileData> listData = payrollFile.getPayrollFileData();
+        List<PayrollFileData> list = validateDataAll(payroll.getPayrollFileData());
+        payroll.setPayrollFileData(list.isEmpty() ? null : list);
 
-            for (PayrollFileData payrollFileData : listData) {
-                System.out.println(payrollFileData);
-                List<ValidateError> errorsData = validateData(payrollFileData);
-                System.out.println(errorsData);
-                if (errorsData.isEmpty()) {
-                    listData.remove(payrollFileData);
-                }else {
-                    payrollFileData.setValidateErrors(errorsData);
-                    listData.add(payrollFileData);
-                }
+        if (!payroll.getValidateErrors().isEmpty() || payroll.getPayrollFileData() != null) {
+            throw new PayrollException(payroll);
+        }
+    }
+
+    private List<PayrollFileData> validateDataAll(final List<PayrollFileData> listData) {
+        List<PayrollFileData> listError = new ArrayList<>();
+        for (PayrollFileData data : listData) {
+            List<ValidateError> errors = validateData(data);
+            errors.removeIf(Objects::isNull);
+            if (!errors.isEmpty()) {
+                data.setValidateErrors(errors);
+                listError.add(data);
             }
-
-            if(listData.isEmpty()){
-                payrollFile.setPayrollFileData(null);
-            }else{
-                isValid = false;
-                payrollFile.setPayrollFileData(listData);
-            }
-        }else {
-            isValid = false;
         }
 
-        if (!isValid) {
-            throw new PayrollException(payrollFile);
-        }
+        return listError;
     }
 
     private List<ValidateError> validateData(final PayrollFileData payrollFileData) {
@@ -73,7 +72,6 @@ public class PayrollValidationDataServiceImpl extends PayrollValidationServiceIm
         errors.add(validateLeaveDays(payrollFileData.getLeaveDays()));
         errors.add(validateTotalDays(payrollFileData.getTotalDays()));
         errors.add(validateDateOfAdmission(payrollFileData.getDateOfAdmission()));
-
         errors.removeIf(Objects::isNull);
 
         return errors;

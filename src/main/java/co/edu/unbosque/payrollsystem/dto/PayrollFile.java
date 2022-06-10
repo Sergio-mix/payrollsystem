@@ -6,15 +6,15 @@ import java.util.List;
 
 @Data
 public class PayrollFile {
-    private Object typeDocument;
-    private Object documentNumber;
-    private Object businessName;
-    private Object reference;
-    private Object request;
+    private String typeDocument;
+    private Integer documentNumber;
+    private String businessName;
+    private Integer reference;
+    private String request;
 
-    private List<Object> headers;
-    private List<Object> headersData;
-    private List<Object> headersDataDynamic;
+    private List<String> headers;
+    private List<String> headersData;
+    private List<String> headersDataDynamic;
 
     private List<PayrollFileData> PayrollFileData;
 

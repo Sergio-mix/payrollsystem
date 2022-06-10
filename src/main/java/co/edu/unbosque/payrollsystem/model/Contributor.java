@@ -41,6 +41,12 @@ public class Contributor implements Serializable {
     @Column(name = "state", nullable = false, length = 1)
     private String state = ACTIVE;
 
+    public Contributor(TypeDocument typeDocument, String documentNumber, String nameOfTheContributor) {
+        this.typeDocument = typeDocument;
+        this.documentNumber = documentNumber;
+        this.nameOfTheContributor = nameOfTheContributor;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
