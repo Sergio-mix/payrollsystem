@@ -43,7 +43,7 @@ public class PayrollData implements Serializable {
     @Column(name = "position", nullable = false, length = 25)
     private String position;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "collaborator_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date collaboratorDate;
 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 /**
@@ -35,6 +36,7 @@ public class UserServiceImpl {
      * @param user the user
      * @return the user
      */
+    @Transactional(rollbackOn = {User.class, Authority.class})
     public Optional<User> saveUser(User user) throws UserException {
         userValidation.validateRegisterUser(user);//validate user
         List<Authority> authorities = (List<Authority>) user.getAuthorities();
@@ -58,6 +60,7 @@ public class UserServiceImpl {
      * @param userDataUpdate user data update
      * @param currentUser    user data current
      */
+    @Transactional(rollbackOn = User.class)
     public Optional<User> updateUser(User userDataUpdate, User currentUser) throws UserException {
         userValidation.validateUpdateUser(userDataUpdate, currentUser);//validate user
         //set data
@@ -108,6 +111,7 @@ public class UserServiceImpl {
      * @param user the user
      * @return the user
      */
+    @Transactional(rollbackOn = {User.class})
     public Optional<User> statusUser(User user) {
         user.setEnabled(!user.getEnabled());
         user.setState(user.getEnabled() ? User.ACTIVE : User.INACTIVE);

@@ -127,6 +127,7 @@ const AddFiles = (props) => {
                     <h1 className={"mt-1 text-color-grey font-size-20"}>
                         Files: {props.list.length}
                     </h1>
+
                     <button className={"w-20 btn-3-user bg-aux-color border-radius-main-2 box-shadow-main-2"}
                             onClick={next}>Process
                     </button>

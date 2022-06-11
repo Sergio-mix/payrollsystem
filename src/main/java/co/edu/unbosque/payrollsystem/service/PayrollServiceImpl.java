@@ -61,7 +61,8 @@ public class PayrollServiceImpl {
             List<PayrollData> listPayrollData = new ArrayList<>();
             for (PayrollFileData data : payrollFileData) {
                 Optional<Contributor> contributor = creteContributor(data.getNameOfTheContributor(), data.getTypeDocument(), data.getDocumentNumber().toString());
-                Optional<PayrollData> payrollData = createPayrollData(payroll.get(), contributor.get(), data.getPosition(), new Date(), data.getSalary(), data.getWorkedDays(),
+                Optional<PayrollData> payrollData = createPayrollData(payroll.get(), contributor.get(), data.getPosition(),
+                        dateCalendar.dateFormat("yyyy-MM-dd", data.getYear() + "-" + data.getMonth() + "-01"), data.getSalary(), data.getWorkedDays(),
                         data.getDaysOfDisability(), data.getLeaveDays(), data.getTotalDays(), data.getDateOfAdmission());
                 listPayrollData.add(payrollData.get());
             }
@@ -125,9 +126,10 @@ public class PayrollServiceImpl {
         return listOrder;
     }
 
-    private Optional<Payroll> createPayroll(String typeDocument, Integer documentNumber,
-                                            String businessName, Integer reference,
-                                            String request) {
+    @Transactional(rollbackOn = {Payroll.class})
+    Optional<Payroll> createPayroll(String typeDocument, Integer documentNumber,
+                                    String businessName, Integer reference,
+                                    String request) {
         Payroll payroll = new Payroll();
         payroll.setTypeDocument(payrollValidation.getTypeDocument().findByName(typeDocument.toUpperCase()).get());
         payroll.setDocumentNumber(documentNumber.toString());
@@ -139,14 +141,16 @@ public class PayrollServiceImpl {
         return payrollValidation.getPayroll().save(payroll);
     }
 
-    private Optional<PayrollData> createPayrollData(Payroll payroll, Contributor contributor,
-                                                    String position, Date collaboratorDate, Integer salary,
-                                                    Integer workedDays, Integer daysOfDisability,
-                                                    Integer leaveDays, Integer totalDays, Date dateOfAdmission) {
+    @Transactional(rollbackOn = {PayrollData.class})
+    Optional<PayrollData> createPayrollData(Payroll payroll, Contributor contributor,
+                                            String position, Date collaboratorDate,
+                                            Integer salary, Integer workedDays,
+                                            Integer daysOfDisability, Integer leaveDays,
+                                            Integer totalDays, Date dateOfAdmission) {
         PayrollData payrollData = new PayrollData();
         payrollData.setPayroll(payroll);
-        payrollData.setPosition(position.toUpperCase());
         payrollData.setContributor(contributor);
+        payrollData.setPosition(position.toUpperCase());
         payrollData.setCollaboratorDate(collaboratorDate);
         payrollData.setSalary(salary);
         payrollData.setWorkedDays(workedDays);
@@ -157,7 +161,8 @@ public class PayrollServiceImpl {
         return payrollDataRepository.save(payrollData);
     }
 
-    private Optional<Contributor> creteContributor(String name, String typeDocument, String documentNumber) {
+    @Transactional(rollbackOn = {Contributor.class})
+    Optional<Contributor> creteContributor(String name, String typeDocument, String documentNumber) {
         Optional<TypeDocument> typeDocumentOptional = payrollValidation.getTypeDocument().findByName(typeDocument.toUpperCase());
         Optional<Contributor> contributor = contributorRepository.existsContributor(typeDocumentOptional.get(), documentNumber);
         if (contributor.isEmpty()) {
