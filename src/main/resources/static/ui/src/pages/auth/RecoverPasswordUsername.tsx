@@ -30,7 +30,7 @@ const RecoverPasswordUsername = () => {
                         <span>Login</span>
                     </a>
 
-                    <input className={"w-30 btn-3-user bg-color-aux border-radius-main-2 box-shadow-main-2"}
+                    <input className={"w-30 btn-3-user bg-aux-color border-radius-main-2 box-shadow-main-2"}
                            type={"submit"}
                            value={"Next"}/>
                 </div>
@@ -60,7 +60,7 @@ const RecoverPasswordUsername = () => {
 
 
     useEffect(() => {
-        document.title = "PayrollFile - Restore password";
+        document.title = "Payroll - Restore password";
         setContent(<Btn/>);
     }, []);
 

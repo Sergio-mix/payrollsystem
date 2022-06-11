@@ -177,6 +177,10 @@ body {
     padding: 2rem 1rem;
 }
 
+.transition-3s {
+    transition: all 0.3s ease;
+}
+
 .btn {
     border: none;
     padding: 15px 32px;
@@ -244,6 +248,11 @@ body {
     background-color: var(--detail-color);
     -ms-transform: scale(1.1);
     transform: scale(1.1);
+}
+
+.transform-scale-1-3:hover {
+    -ms-transform: scale(1.3);
+    transform: scale(1.3);
 }
 
 .btn:hover {

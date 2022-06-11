@@ -1,4 +1,4 @@
-import {Fragment, useRef, useState} from "react";
+import {Fragment, useEffect, useRef, useState} from "react";
 import {AiOutlineCloudUpload, AiOutlineDelete, AiOutlineFileExcel} from "react-icons/all";
 
 const AddFiles = (props) => {
@@ -95,6 +95,10 @@ const AddFiles = (props) => {
         }
     };
 
+    useEffect(() => {
+        document.title = "Add file | Payroll";
+    }, []);
+
     return (
         <div className={"form-main form-table box-shadow-main border-radius-main mb-5 effect-main"}>
             <h1>Add payroll</h1>
@@ -123,7 +127,7 @@ const AddFiles = (props) => {
                     <h1 className={"mt-1 text-color-grey font-size-20"}>
                         Files: {props.list.length}
                     </h1>
-                    <button className={"w-20 btn-3-user bg-color-aux border-radius-main-2 box-shadow-main-2"}
+                    <button className={"w-20 btn-3-user bg-aux-color border-radius-main-2 box-shadow-main-2"}
                             onClick={next}>Process
                     </button>
                 </div>

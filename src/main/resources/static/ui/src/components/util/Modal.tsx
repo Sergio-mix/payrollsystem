@@ -8,7 +8,7 @@ const Modal = (props) => {
                 <div className="modal-v1 border-radius-main box-shadow-main">
                     {props.content}
                     {(props.isClose === undefined || props.isClose === true ?
-                        <button className={"btn-close-modal box-shadow-main-2 w-50 border-radius-main"}
+                        <button className={"btn-close-modal btn-close-modal-hovel box-shadow-main-2 w-50 border-radius-main"}
                                 onClick={props.close}>Close</button> : null)}
                 </div>
             </div>

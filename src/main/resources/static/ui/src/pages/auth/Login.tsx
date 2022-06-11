@@ -31,7 +31,7 @@ const Login = () => {
                     <span>Forgot the password?</span>
                 </a>
                 <input type="submit" value="Get into"
-                       className={"w-30 btn-3-user bg-color-aux border-radius-main-2 box-shadow-main-2"}/>
+                       className={"w-30 btn-3-user bg-aux-color border-radius-main-2 box-shadow-main-2"}/>
             </div>)
     }
 
@@ -111,7 +111,7 @@ const Login = () => {
                 }
             });
         }
-        document.title = "PayrollFile - Login";
+        document.title = "Payroll - Login";
     }, []);
 
     return (

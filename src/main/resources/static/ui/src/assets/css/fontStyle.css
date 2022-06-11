@@ -2,10 +2,20 @@
     background: #f0f3f6;
 }
 
+.bg-first-color {
+    background: var(--first-color);
+}
+
 .bg-detail-color-main {
     color: #fff;
     background: var(--detail-color);
     background: linear-gradient(to right, var(--detail-color), var(--detail-color));
+}
+
+.bg-aux-hover-color:hover {
+    color: var(--second-color);
+    background: var(--aux-color);
+    background: linear-gradient(to right, var(--aux-color), var(--aux-color));
 }
 
 .bg-color {
@@ -13,9 +23,9 @@
     background: linear-gradient(to right, var(--second-color), var(--second-color));
 }
 
-.bg-color-aux {
-    background: var(--aux-color);
-    color: var(--second-color);
+.bg-aux-color {
+    background: var(--aux-color) !important;
+    color: var(--second-color) !important;
 }
 
 
@@ -36,7 +46,7 @@
 }
 
 .text-color-yellow {
-    color: #f9c814;
+    color: #ffd500;
 }
 
 .text-color-grey-hover-red {
@@ -158,6 +168,14 @@
 
 .w-30 {
     width: 30% !important;
+}
+
+.w-35 {
+    width: 35% !important;
+}
+
+.w-40 {
+    width: 40% !important;
 }
 
 .w-90 {

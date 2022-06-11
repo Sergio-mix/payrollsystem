@@ -46,7 +46,6 @@ public class UserRest {
             } else {
                 userHistoryServiceImpl.save(userLogin.getName(), new Record(Record.POST, "register user"),
                         "added to the user " + us.get().getUsername(), request);//Save record
-
                 mailService.sendMailCredentials(user.getEmail(), password, user.getUsername(), user.getNames(), request);//send mail
                 response = new ResponseEntity<>("Successfully registered user", HttpStatus.CREATED);
             }

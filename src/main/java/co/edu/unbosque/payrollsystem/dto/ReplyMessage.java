@@ -14,11 +14,12 @@ public class ReplyMessage {
     public static final String PASSWORD_EQUALS = "Can't put the same password";
     public static final String PASSWORD_NOT_UPDATED = "Password not updated";
     public static final String USER_NOT_ENABLED = "Your user is disabled, please contact the administrator";
-    public final static String ERROR_505 = "Something went wrong";
+    public final static String ERROR_505 = "Something went wrong :(";
     public static final String RECOVER_PASSWORD = "Check your email if I don't arrive it's because you don't have the required permissions";
     public static final String BEGINNING_BEFORE_FINAL = "The beginning date must be before the final date";
     public static final String UPDATE_USER = "Successfully updated user";
     public static final String FAILED_UPDATE_USER = "Failed to update user";
     public static final String NOT_ENABLE = "You can't enable this user";
     public static final String NOT_LOGIN = "Could not log in";
+    public static final String FORMAT_NOT_VALID = "Invalid payroll format";
 }

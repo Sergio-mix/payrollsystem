@@ -1,7 +1,7 @@
 import {Fragment, useEffect, useState} from "react";
 import {enableUser, getUsersAll} from "../../services/userService";
 import {MDBDataTableV5} from 'mdbreact';
-import {AiFillLock, AiOutlineReload} from "react-icons/ai";
+import {AiFillEdit, AiFillLock, AiOutlineReload} from "react-icons/ai";
 import UserForm from "./UserForm";
 import {useNavigate} from "react-router-dom";
 import {RiShieldUserFill} from "react-icons/all";
@@ -58,7 +58,7 @@ const Users = (props) => {
     // open user update
     const userBtnUpdate = (user) => {
         return <button className={"btn-2 bg-color box-shadow-main-2 text-color-grey border-radius-main"}
-                       onClick={ev => updateUser(user)}>Update</button>
+                       onClick={ev => updateUser(user)}><AiFillEdit className={"font-size-20"}/></button>
     };
 
     /**
@@ -217,12 +217,12 @@ const Users = (props) => {
                 sort: 'asc',
                 width: 150
             }, {
-                label: '#',
+                label: 'Status',
                 field: 'status',
                 sort: 'asc',
                 width: 150
             }, {
-                label: '#',
+                label: 'Update',
                 field: 'action',
                 sort: 'asc',
                 width: 150
@@ -281,7 +281,7 @@ const Users = (props) => {
      * @description: Set initial state
      */
     useEffect(() => {
-        document.title = "Users | PayrollFile";
+        document.title = "Users | Payroll";
         allUsers().then(r => null);
     }, []);
 

@@ -57,7 +57,7 @@ const RecoverPasswordCode = () => {
                         <span>Login</span>
                     </a>
 
-                    <input className={"w-auto btn-3-user bg-color-aux border-radius-main-2 box-shadow-main-2"}
+                    <input className={"w-auto btn-3-user bg-aux-color border-radius-main-2 box-shadow-main-2"}
                            type={"submit"}
                            value={"Send code"} onClick={verifyCode}/>
                 </div>
@@ -170,7 +170,7 @@ const RecoverPasswordCode = () => {
     }
 
     useEffect(() => {
-        document.title = "PayrollFile - Restore password";
+        document.title = "Payroll - Restore password";
         setContentForm(<FormVerifyCode/>);
         setContentIn(<BtnVerifyCode/>);
     }, []);

@@ -1,14 +1,19 @@
 import {Fragment, useEffect, useState} from "react";
 import {
-    AiOutlineBulb,
     AiOutlineCheck,
     AiOutlineClose,
-    AiOutlineFileExcel,
-    GrSecure
+    AiOutlineFileExcel
 } from "react-icons/all";
 import {savePayroll} from "../../services/payrollService";
-import {useNavigate} from "react-router-dom";
-import {AiFillFileExcel, AiFillLock, AiFillProfile, AiOutlineCaretLeft, AiOutlineMenuUnfold} from "react-icons/ai";
+import {BrowserRouter, useNavigate} from "react-router-dom";
+import {
+    AiFillFileExcel,
+    AiFillLock,
+    AiFillWarning,
+    AiOutlineCaretLeft,
+    AiOutlineMenuUnfold
+} from "react-icons/ai";
+import InfoFile from "./InfoFile";
 
 const ProcessFiles = (props) => {
     const navigate = useNavigate();
@@ -35,10 +40,16 @@ const ProcessFiles = (props) => {
             return Math.max(bytes, 0.1).toFixed(1) + byteUnits[i];
         }
 
+        const detailInconsistent = () => {
+            console.log(response.data);
+            props.modal.open(<InfoFile/>);
+        }
+
         const handleClick200 = () => {
             props.modal.open(
-                <div>
-                    <span className={"font-size-25 text-color-grey"}><AiOutlineCheck className={"text-color-green font-size-40"}/> {response.data}</span>
+                <div className={"mb-2"}>
+                    <span className={"font-size-25 text-color-grey"}><AiOutlineCheck
+                        className={"text-color-green font-size-40"}/> {response.data}</span>
                 </div>);
         }
 
@@ -54,34 +65,40 @@ const ProcessFiles = (props) => {
         }
 
         const handleClick400 = () => {
-            let datainconsistencies = 0;
+            let cont = 0;
 
             if (response.data.payrollFileData !== null) {
                 response.data.payrollFileData.map(item => {
-                    datainconsistencies += item.validateErrors.length
+                    cont += item.validateErrors.length
                 });
             }
 
-            props.modal.open(<div className={"mb-3"}>
-                <h1 className={"font-size-30"}><AiOutlineBulb
+            props.modal.openIsCloseNot(<Fragment>
+                <h1 className={"font-size-30"}><AiFillWarning
                     className={"text-color-yellow font-size-40"}/> inconsistencies
                 </h1>
-                <p className={"font-size-20 text-color-grey"}>There were inconsistencies in the information in the
-                    file</p>
-                <div className={"justify-content-center"}>
-                    <div className={""}>
-                        <span className={"font-size-16 box-shadow-main-2 border-radius-main p-2 m-2"}>
-                            <AiFillFileExcel/> File format: {response.data.validateErrors.length} </span>
-                        <span className={"font-size-16 box-shadow-main-2 border-radius-main p-2 m-2"}>
-                            <AiOutlineMenuUnfold/> file data: {datainconsistencies} </span>
-                    </div>
-                    <div className={"mt-4"}>
-                        <span className={"font-size-18"}>You can see in detail the payroll problems here:</span>
-                        <button className={"mt-2"}>Open viewer</button>
-                    </div>
+                <span
+                    className={"font-size-20 text-color-grey"}>There are inconsistencies in the payroll</span>
+                <div className={"d-flex justify-content-center"}>
+                    {response.data.validateErrors.length > 0 ?
+                        <p className={"font-size-16 text-color-grey m-1 box-shadow-main-2 border-radius-main box-shadow-main-2 p-2 bg-first-color"}>
+                            <AiFillFileExcel/> File format: {response.data.validateErrors.length}
+                        </p> : null}
+                    {cont > 0 ?
+                        <p className={"font-size-16 text-color-grey m-1 box-shadow-main-2 border-radius-main p-2 bg-first-color"}>
+                            <AiOutlineMenuUnfold/> file data: {cont} </p> : null}
                 </div>
-            </div>);
-            console.log(response.data);
+                <div className={"d-flex mt-3 justify-content-center"}>
+                    <button
+                        className={"btn-close-modal btn-close-modal-hovel box-shadow-main-2 border-radius-main w-30 ms-2 me-2"}
+                        onClick={() => props.modal.close()}>Close
+                    </button>
+                    <button onClick={detailInconsistent}
+                        className={"btn-2 transition-3s bg-aux-color bg-aux-hover-color box-shadow-main-2 border-radius-main w-35 ms-2 me-2"}>See
+                        in detail
+                    </button>
+                </div>
+            </Fragment>);
         }
 
         const handleClick500 = () => {
@@ -112,7 +129,7 @@ const ProcessFiles = (props) => {
         return (
             <Fragment>
                 <div
-                    className={"d-flex center justify-content-between border-radius-main mt-3 ps-2 pe-2 w-100"}>
+                    className={"d-flex m-auto center justify-content-between border-radius-main mt-3 ps-2 pe-2 w-80 box-shadow-hover"}>
                     <div className={"center"}>
                         <AiOutlineFileExcel className={"text-color-green font-size-35"}/>
                         <div className={"mt-2 ms-2"}>
@@ -124,18 +141,18 @@ const ProcessFiles = (props) => {
                         response.status !== null ?
                             response.status === 200
                                 ? <AiOutlineCheck onClick={handleClick200}
-                                                  className={"text-color-green cursor-pointer"}/>
+                                                  className={"text-color-green cursor-pointer transition-3s transform-scale-1-3"}/>
                                 : response.status === 400
-                                    ? <AiOutlineBulb onClick={handleClick400}
-                                                     className={"text-color-yellow cursor-pointer"}/>
+                                    ? <AiFillWarning onClick={handleClick400}
+                                                     className={"text-color-yellow cursor-pointer transition-3s transform-scale-1-3"}/>
                                     : response.status === 500
                                         ? <AiOutlineClose onClick={handleClick500}
-                                                          className={"text-color-red cursor-pointer"}/>
+                                                          className={"text-color-red cursor-pointer transition-3s transform-scale-1-3"}/>
                                         : response.status === 401
                                             ? <AiFillLock onClick={handleClick401}
-                                                          className={"text-color-grey cursor-pointer"}/>
+                                                          className={"text-color-grey cursor-pointer transition-3s transform-scale-1-3"}/>
                                             : <AiOutlineClose onClick={handleClick500}
-                                                              className={"text-color-red cursor-pointer"}/>
+                                                              className={"text-color-red cursor-pointer transition-3s transform-scale-1-3"}/>
                             : <span className="spinner-border font-size-14 text-color-grey"/>}
                     </div>
                 </div>
@@ -157,6 +174,7 @@ const ProcessFiles = (props) => {
 
     useEffect(() => {
         return () => {
+            document.title = "Process file | Payroll";
             setItems(listItems(props.list));
         }
     }, []);

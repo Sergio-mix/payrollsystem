@@ -60,7 +60,7 @@ const Profile = (props) => {
      * @description: Set initial state
      */
     useEffect(() => {
-        document.title = userData.username + " | PayrollFile";
+        document.title = userData.username + " | Payroll";
         if (userData !== Object(userData)) {
             setFormProfileContainer(<p className={"text-center font-size-25"}>Could not get the data</p>)
             // @ts-ignore

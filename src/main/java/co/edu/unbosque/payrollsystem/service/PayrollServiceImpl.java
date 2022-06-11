@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.IntStream;
@@ -48,19 +49,28 @@ public class PayrollServiceImpl {
 
         payrollValidation.validatePayroll(payrollFile);//validate payroll
 
-        Optional<Payroll> payroll = createPayroll(payrollFile.getTypeDocument(), payrollFile.getDocumentNumber(),
-                payrollFile.getBusinessName(), payrollFile.getReference(), payrollFile.getRequest());
+        return registerPayroll(payrollFile, setPayrollFileDataDto);
+    }
 
-        List<PayrollData> listPayrollData = new ArrayList<>();
-        for (PayrollFileData data : setPayrollFileDataDto) {
-            Optional<Contributor> contributor = creteContributor(data.getNameOfTheContributor(), data.getTypeDocument(), data.getDocumentNumber().toString());
-            Optional<PayrollData> payrollData = createPayrollData(payroll.get(), contributor.get(), data.getPosition(), new Date(), data.getSalary(), data.getWorkedDays(),
-                    data.getDaysOfDisability(), data.getLeaveDays(), data.getTotalDays(), data.getDateOfAdmission());
-            listPayrollData.add(payrollData.get());
+    @Transactional(rollbackOn = {Payroll.class, PayrollData.class, Contributor.class})
+    Optional<Payroll> registerPayroll(PayrollFile payrollFile, List<PayrollFileData> payrollFileData) {
+        try {
+            Optional<Payroll> payroll = createPayroll(payrollFile.getTypeDocument(), payrollFile.getDocumentNumber(),
+                    payrollFile.getBusinessName(), payrollFile.getReference(), payrollFile.getRequest());
+
+            List<PayrollData> listPayrollData = new ArrayList<>();
+            for (PayrollFileData data : payrollFileData) {
+                Optional<Contributor> contributor = creteContributor(data.getNameOfTheContributor(), data.getTypeDocument(), data.getDocumentNumber().toString());
+                Optional<PayrollData> payrollData = createPayrollData(payroll.get(), contributor.get(), data.getPosition(), new Date(), data.getSalary(), data.getWorkedDays(),
+                        data.getDaysOfDisability(), data.getLeaveDays(), data.getTotalDays(), data.getDateOfAdmission());
+                listPayrollData.add(payrollData.get());
+            }
+
+            payroll.get().setPayrollData(listPayrollData);
+            return payrollValidation.getPayroll().save(payroll.get());
+        } catch (Exception e) {
+            return Optional.empty();
         }
-
-        payroll.get().setPayrollData(listPayrollData);
-        return payrollValidation.getPayroll().save(payroll.get());
     }
 
     private PayrollFile setPayrollDataDto(final XSSFSheet sheet) {
@@ -153,7 +163,6 @@ public class PayrollServiceImpl {
         if (contributor.isEmpty()) {
             contributor = contributorRepository.save(new Contributor(typeDocumentOptional.get(), documentNumber, name.toUpperCase()));
         }
-
         return contributor;
     }
 

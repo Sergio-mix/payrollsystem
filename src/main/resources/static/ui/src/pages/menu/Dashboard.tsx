@@ -40,7 +40,6 @@ const Dashboard = () => {
 
     function closeModal() {
         setShowModal(false);
-        setContentModal(null);
     }
 
     function error401() {
@@ -140,7 +139,7 @@ const Dashboard = () => {
     function menu(value, userData) {
         return <Menu userData={userData}
                      icon={<MdCloudCircle className={"text-color-aux font-size-50"}/>}
-                     title={"PayrollFile"}
+                     title={"Payroll"}
                      text={value[0].text}
                      component={value[0].component}
                      contents={
@@ -153,26 +152,31 @@ const Dashboard = () => {
      * @description: Set initial state
      */
     useEffect(() => {
-        if (localStorage.getItem("USER_KEY") === null
-            || localStorage.getItem("USER_ID") === null) {
-            // @ts-ignore
-            localStorage.setItem("USER_KEY", location.state.token);
-            // @ts-ignore
-            localStorage.setItem("USER_ID", location.state.userId);
-        }
-
-        setComponent(<ChargingPad title={"Welcome"} description={"We are recovering your information"}/>);//component initial
-
-        // @ts-ignore
-        load(Number(localStorage.getItem("USER_ID"))).then(r => {
-            setTimeout(() => {
-                assignFeatures(r);// dashboard component
-            }, 1500);
-        }).catch(error => {
-            if (error.response.status === 401) {
-                error401();
+        try {
+            if (localStorage.getItem("USER_KEY") === null
+                || localStorage.getItem("USER_ID") === null) {
+                // @ts-ignore
+                localStorage.setItem("USER_KEY", location.state.token);
+                // @ts-ignore
+                localStorage.setItem("USER_ID", location.state.userId);
             }
-        });
+
+            setComponent(<ChargingPad title={"Welcome"} description={"We are recovering your information"}/>);//component initial
+
+            // @ts-ignore
+            load(Number(localStorage.getItem("USER_ID"))).then(r => {
+                setTimeout(() => {
+                    assignFeatures(r);// dashboard component
+                }, 1500);
+            }).catch(error => {
+                if (error.response.status === 401) {
+                    error401();
+                }
+            });
+        } catch (error) {
+            localStorage.clear();
+            navigate("/login");
+        }
     }, []);
 
     return (

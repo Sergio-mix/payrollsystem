@@ -23,10 +23,9 @@
     position: absolute;
     z-index: 999;
     background-color: var(--second-color);
-    width: 600px;
-    max-width: 100%;
+    min-width: 600px;
+    max-width: 90%;
     padding: 3rem 2rem;
-    transition: all 0.3s ease;
 }
 
 .btn-close-modal {
@@ -38,7 +37,7 @@
     color: var(--detail-color);
 }
 
-.btn-close-modal:hover {
+.btn-close-modal-hovel:hover {
     background-color: var(--detail-color);
     color: var(--second-color);
 }

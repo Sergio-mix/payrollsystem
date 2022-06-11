@@ -28,7 +28,7 @@ const PayrollFiles = (props) => {
     }
 
     useEffect(() => {
-        document.title = "PayrollFile | PayrollFile";
+        document.title = "PayrollFile | Payroll";
         setComponent(FORM_1);
     }, []);
 

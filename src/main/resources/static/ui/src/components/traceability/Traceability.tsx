@@ -5,7 +5,7 @@ import {
     getTraceabilityByUserUserId
 } from "../../services/TraceabilityService";
 import Select from "react-select";
-import {AiFillLock, AiOutlineSearch} from "react-icons/ai";
+import {AiFillLock, AiOutlineFullscreen, AiOutlineSearch, AiOutlineSolution} from "react-icons/ai";
 import {getUsersAllNames} from "../../services/userService";
 import {useNavigate} from "react-router-dom";
 
@@ -197,7 +197,8 @@ const Traceability = (props) => {
             record["date"] = formatDate(record["date"]);
             record["record_name"] = record.record.name;
             record["action"] = <button className={"btn-2 border-radius-main box-shadow-main-2 bg-color text-color-aux"}
-                                       onClick={() => setContentUser(<UserForm record={record}/>)}>Detail</button>;
+                                       onClick={() => setContentUser(<UserForm record={record}/>)}><AiOutlineSolution
+                className={"font-size-20"}/></button>;
 
             listRecord.push(record);
         });
@@ -376,7 +377,7 @@ const Traceability = (props) => {
      * @description: Set initial state
      */
     useEffect(() => {
-        document.title = "Traceability | PayrollFile";
+        document.title = "Traceability | Payroll";
         allTraceabilityList().then(r => setLoading(false));
     }, []);
 

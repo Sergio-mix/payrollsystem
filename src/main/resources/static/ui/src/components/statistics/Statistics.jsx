@@ -40,7 +40,7 @@ const Statistics = () => {
     };
 
     useEffect(() => {
-        document.title = "Statistics | PayrollFile";
+        document.title = "Statistics | Payroll";
     }, []);
 
     return (
