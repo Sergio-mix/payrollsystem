@@ -1,6 +1,7 @@
 package co.edu.unbosque.payrollsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,44 +24,49 @@ public class PayrollDynamic implements Serializable {
     public static final String INACTIVE = "I";
 
     @Serial
-    private static final long serialVersionUID = 4333214L;
+    private static final long serialVersionUID = 4424314L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "salary", nullable = false)
-    private Integer salary = 0;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"payrollDynamic", "state"})
+    @JoinColumn(name = "fk_payroll_data", nullable = false, referencedColumnName = "id")
+    private PayrollData payrollData;
 
-    @Column(name = "support_for", nullable = false)
-    private Integer supportFor = 0;
+    @Column(name = "minimum_wage", nullable = false)
+    private Float minimumWage = 0F;
 
-    @Column(name = "overtime_daytime", nullable = false)
-    private Integer overtimeDaytime = 0;
+    @Column(name = "support", nullable = false)
+    private Float support = 0F;
 
-    @Column(name = "overtime", nullable = false)
-    private Integer overtime = 0;
+    @Column(name = "overtime_hour", nullable = false)
+    private Float overtimeHour = 0F;
+
+    @Column(name = "overtime_hour_fa", nullable = false)
+    private Float overtimeHourFa = 0f;
 
     @Column(name = "commissions", nullable = false)
-    private Integer commissions = 0;
+    private Float commissions = 0F;
 
     @Column(name = "holidays", nullable = false)
-    private Integer holidays = 0;
+    private Float holidays = 0F;
 
-    @Column(name = "Mandatory_vacation", nullable = false)
-    private Integer MandatoryVacation = 0;
+    @Column(name = "required_holiday", nullable = false)
+    private Float requiredHoliday = 0F;
 
-    @Column(name = "input", nullable = false)
-    private Integer input = 0;
+    @Column(name = "aj_apor_ins", nullable = false)
+    private Float ajAporIns = 0F;
 
-    @Column(name = "Retirement_bonus", nullable = false)
-    private Integer RetirementBonus = 0;
+    @Column(name = "withdrawal_bonus", nullable = false)
+    private Float withdrawalBonus = 0F;
 
     @Column(name = "compensation", nullable = false)
-    private Integer compensation = 0;
+    private Float compensation = 0F;
 
     @Column(name = "inability", nullable = false)
-    private Integer inability = 0;
+    private Float inability = 0F;
 
     @JsonIgnore
     @Column(name = "state", nullable = false, length = 1)

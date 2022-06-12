@@ -36,6 +36,11 @@ public class PayrollData implements Serializable {
     @JoinColumn(name = "fk_payroll", nullable = false, referencedColumnName = "id")
     private Payroll payroll;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"payrollData", "state"})
+    @JoinColumn(name = "fk_payroll_dynamic", referencedColumnName = "id")
+    private PayrollDynamic payrollDynamic;
+
     @ManyToOne
     @JoinColumn(name = "fk_contributor", nullable = false, referencedColumnName = "id")
     private Contributor contributor;
@@ -48,7 +53,7 @@ public class PayrollData implements Serializable {
     private Date collaboratorDate;
 
     @Column(name = "salary", nullable = false)
-    private Integer salary = 0;
+    private Float salary = 0F;
 
     @Column(name = "worked_days", nullable = false)
     private Integer workedDays = 0;

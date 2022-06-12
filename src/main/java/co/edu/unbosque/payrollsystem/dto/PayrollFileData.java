@@ -16,24 +16,14 @@ public class PayrollFileData {
     private String position;
     private Integer year;
     private Integer month;
-    private Integer salary;
+    private Float salary;
     private Integer workedDays;
     private Integer daysOfDisability;
     private Integer leaveDays;
     private Integer totalDays;
     @Temporal(TemporalType.DATE)
     private Date dateOfAdmission;
+    private PayrollFileDynamic dynamicData;
 
     private List<ValidateError> validateErrors;
-//    private Object minimumWage;
-//    private Object support;
-//    private Object overtimeHour;
-//    private Object overtimeHourFa;
-//    private Object commission;
-//    private Object holiday;
-//    private Object requiredHoliday;
-//    private Object ajAporIns;
-//    private Object withdrawalBonus;
-//    private Object compensation;
-//    private Object inability;
 }

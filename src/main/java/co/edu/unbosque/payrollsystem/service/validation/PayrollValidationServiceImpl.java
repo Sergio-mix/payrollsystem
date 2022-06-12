@@ -24,6 +24,10 @@ public class PayrollValidationServiceImpl {
     String[] headersDataList = {"ORDEN", "TIPODOCUMENTO", "NUMERO", "NOMBRECOTIZANTE", "CARGO", "ANO", "MES",
             "SALARIO", "DIASTRABAJADOS", "DIASINCAPACIDAD", "DIASLICENCIA", "TOTALDIAS", "FECHADEINGRESO"};
 
+    String[] headersDynamicList = {"SUELDOBASICO", "APOYO", "HORAEXTRADIURNA", "HORAEXTRAFA",
+            "COMISIONES", "VACACIONES", "VACACIONESOBLIGATORIAS", "AJAPORINS", "BONODERETIRO", "COMPENSACION",
+            "INCAPACIDAD"};
+
     public ValidateError validateTypeDocument(final String documentType) {
         final var attribute = "typeDocument";
         return documentType == null
@@ -38,7 +42,9 @@ public class PayrollValidationServiceImpl {
     public ValidateError validateDocumentNumber(final Integer documentNumber) {
         final var attribute = "documentNumber";
         return documentNumber == null
-                ? new ValidateError(attribute, "Invalid value not a number")
+                ? new ValidateError(attribute, "The document number is not valid it must be a number")
+                : documentNumber < 0
+                ? new ValidateError(attribute, "The document number cannot be negative")
                 : null;
     }
 
@@ -61,7 +67,9 @@ public class PayrollValidationServiceImpl {
     public ValidateError validateReference(final Integer reference) {
         final var attribute = "reference";
         return reference == null
-                ? new ValidateError(attribute, "The reference not a number")
+                ? new ValidateError(attribute, "The reference is invalid it must be a number")
+                : reference < 0
+                ? new ValidateError(attribute, "The reference cannot be negative")
                 : payroll.existsReference(String.valueOf(reference))
                 ? new ValidateError(attribute, "The reference is already registered")
                 : null;
@@ -81,7 +89,7 @@ public class PayrollValidationServiceImpl {
         for (int i = 0; i < headers.size(); i++) {
             if (!validation.isNullOrEmpty(headers.get(i))) {
                 if (!headersList[i].equals(validation.removeAccents(headers.get(i).replaceAll("\\s+", "")).toUpperCase())) {
-                    sb.append("(").append(headers.get(i)).append(")").append("does not match the format, ");
+                    sb.append("(").append(headers.get(i)).append(") ").append("does not match the format, ");
                 }
             } else {
                 sb.append(headers.get(i) == null ? "not valid" : headersList[i] + " it is required").append(", ");
@@ -118,7 +126,10 @@ public class PayrollValidationServiceImpl {
             if (headersData.size() == headersDataList.length) {
                 sb = headersValidateList(headersData, headersDataList);
             } else {
-                result = "The number of headers data is not valid";
+                result = "The number of headers data is not valid " +
+                        (headersData.size() < headersDataList.length
+                                ? "missing  " + (headersData.size() - headersDataList.length) + " headers"
+                                : "left over " + -(headersDataList.length - headersData.size()) + " headers");
             }
 
             if (sb != null) {
@@ -134,7 +145,7 @@ public class PayrollValidationServiceImpl {
     public ValidateError validateOrder(final Integer order) {
         final var attribute = "order";
         return order == null
-                ? new ValidateError(attribute, "The order not a number")
+                ? new ValidateError(attribute, "The order is invalid it must be a number")
                 : null;
     }
 
@@ -155,56 +166,70 @@ public class PayrollValidationServiceImpl {
     public ValidateError validateYear(final Integer year) {
         final var attribute = "year";
         return year == null
-                ? new ValidateError(attribute, "The year is not a number")
+                ? new ValidateError(attribute, "The year is invalid it must be a number")
+                : year < 0
+                ? new ValidateError(attribute, "The year cannot be negative")
                 : null;
     }
 
     public ValidateError validateMonth(final Integer month) {
         final var attribute = "month";
         return month == null
-                ? new ValidateError(attribute, "The year is not a number")
+                ? new ValidateError(attribute, "The month is invalid it must be a number")
+                : month < 0
+                ? new ValidateError(attribute, "The month cannot be negative")
                 : null;
     }
 
-    public ValidateError validateSalary(final Integer salary) {
+    public ValidateError validateSalary(final Float salary) {
         final var attribute = "salary";
         return salary == null
-                ? new ValidateError(attribute, "The year is not a number")
+                ? new ValidateError(attribute, "The salary is invalid it must be a number")
+                : salary < 0
+                ? new ValidateError(attribute, "The salary cannot be negative")
                 : null;
     }
 
     public ValidateError validateWorkedDays(final Integer workedDays) {
         final var attribute = "workedDays";
         return workedDays == null
-                ? new ValidateError(attribute, "The year is not a number")
+                ? new ValidateError(attribute, "The worked days is invalid it must be a number")
+                : workedDays < 0
+                ? new ValidateError(attribute, "The worked days cannot be negative")
                 : null;
     }
 
     public ValidateError validateDaysOfDisability(final Integer daysOfDisability) {
         final var attribute = "daysOfDisability";
         return daysOfDisability == null
-                ? new ValidateError(attribute, "The year is not a number")
+                ? new ValidateError(attribute, "The days of disability is invalid it must be a number")
+                : daysOfDisability < 0
+                ? new ValidateError(attribute, "The days of disability cannot be negative")
                 : null;
     }
 
     public ValidateError validateLeaveDays(final Integer leaveDays) {
         final var attribute = "leaveDays";
         return leaveDays == null
-                ? new ValidateError(attribute, "The year is not a number")
+                ? new ValidateError(attribute, "The leave days is invalid it must be a number")
+                : leaveDays < 0
+                ? new ValidateError(attribute, "The leave days cannot be negative")
                 : null;
     }
 
-    public ValidateError validateTotalDays(final Integer totalDays) {
+    public ValidateError validateTotalDays(final Integer totalDays, final Integer sumOfDays) {
         final var attribute = "totalDays";
         return totalDays == null
-                ? new ValidateError(attribute, "The year is not a number")
+                ? new ValidateError(attribute, "The total days is invalid it must be a number")
+                : !sumOfDays.equals(totalDays)
+                ? new ValidateError(attribute, "The total of days does not coincide with the calculation of days")
                 : null;
     }
 
     public ValidateError validateDateOfAdmission(final Date dateOfAdmission) {
         final var attribute = "dateOfAdmission";
         return dateOfAdmission == null
-                ? new ValidateError(attribute, "The year is not Valid")
+                ? new ValidateError(attribute, "La fecha de ingreso no es válida, debe ser de formato dd/mm/yyyy")
                 : null;
     }
 

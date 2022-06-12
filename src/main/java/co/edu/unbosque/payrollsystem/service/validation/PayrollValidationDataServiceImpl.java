@@ -67,10 +67,19 @@ public class PayrollValidationDataServiceImpl extends PayrollValidationServiceIm
         errors.add(validateYear(payrollFileData.getYear()));
         errors.add(validateMonth(payrollFileData.getMonth()));
         errors.add(validateSalary(payrollFileData.getSalary()));
-        errors.add(validateWorkedDays(payrollFileData.getWorkedDays()));
-        errors.add(validateDaysOfDisability(payrollFileData.getDaysOfDisability()));
-        errors.add(validateLeaveDays(payrollFileData.getLeaveDays()));
-        errors.add(validateTotalDays(payrollFileData.getTotalDays()));
+
+        ValidateError validateWorkedDays = validateWorkedDays(payrollFileData.getWorkedDays());
+        ValidateError validateDaysOfDisability = validateDaysOfDisability(payrollFileData.getDaysOfDisability());
+        ValidateError validateLeaveDays = validateLeaveDays(payrollFileData.getLeaveDays());
+
+        errors.add(validateWorkedDays == null && validateDaysOfDisability == null && validateLeaveDays == null
+                ? validateTotalDays(payrollFileData.getTotalDays(), payrollFileData.getWorkedDays()
+                - (payrollFileData.getLeaveDays() + payrollFileData.getDaysOfDisability()))
+                : validateTotalDays(payrollFileData.getTotalDays(), 0));
+
+        errors.add(validateWorkedDays);
+        errors.add(validateDaysOfDisability);
+        errors.add(validateLeaveDays);
         errors.add(validateDateOfAdmission(payrollFileData.getDateOfAdmission()));
         errors.removeIf(Objects::isNull);
 

@@ -4,10 +4,12 @@ import co.edu.unbosque.payrollsystem.component.DateCalendarComponent;
 import co.edu.unbosque.payrollsystem.component.ExcelComponent;
 import co.edu.unbosque.payrollsystem.dto.PayrollFile;
 import co.edu.unbosque.payrollsystem.dto.PayrollFileData;
+import co.edu.unbosque.payrollsystem.dto.PayrollFileDynamic;
 import co.edu.unbosque.payrollsystem.exception.PayrollException;
 import co.edu.unbosque.payrollsystem.model.*;
 import co.edu.unbosque.payrollsystem.repository.*;
 import co.edu.unbosque.payrollsystem.service.validation.PayrollValidationDataServiceImpl;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -23,6 +26,9 @@ import java.util.stream.IntStream;
 public class PayrollServiceImpl {
     @Autowired
     private PayrollDataRepository payrollDataRepository;
+
+    @Autowired
+    private PayrollDynamicRepository payrollDynamicRepository;
 
     @Autowired
     private DateCalendarComponent dateCalendar;
@@ -40,11 +46,12 @@ public class PayrollServiceImpl {
         XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
         XSSFSheet sheet = workbook.getSheetAt(0);
 
-        List<PayrollFileData> setPayrollFileDataDto = setPayrollFileDataDto(sheet);
-
         PayrollFile payrollFile = setPayrollDataDto(sheet);
         payrollFile.setHeaders(setListHeadersDto(sheet));
         payrollFile.setHeadersData(setListHeadersDataDto(sheet));
+        payrollFile.setHeadersDataDynamic(setListHeadersDynamicDto(sheet));
+
+        List<PayrollFileData> setPayrollFileDataDto = setPayrollFileDataDto(sheet, payrollFile.getHeadersDataDynamic());
         payrollFile.setPayrollFileData(setPayrollFileDataDto);
 
         payrollValidation.validatePayroll(payrollFile);//validate payroll
@@ -64,6 +71,7 @@ public class PayrollServiceImpl {
                 Optional<PayrollData> payrollData = createPayrollData(payroll.get(), contributor.get(), data.getPosition(),
                         dateCalendar.dateFormat("yyyy-MM-dd", data.getYear() + "-" + data.getMonth() + "-01"), data.getSalary(), data.getWorkedDays(),
                         data.getDaysOfDisability(), data.getLeaveDays(), data.getTotalDays(), data.getDateOfAdmission());
+                payrollData.get().setPayrollDynamic(createPayrollDynamic(payrollData.get(), data.getDynamicData()).get());
                 listPayrollData.add(payrollData.get());
             }
 
@@ -104,7 +112,17 @@ public class PayrollServiceImpl {
         return headersData;
     }
 
-    private List<PayrollFileData> setPayrollFileDataDto(final XSSFSheet sheet) {
+    private List<String> setListHeadersDynamicDto(final XSSFSheet sheet) {
+        List<String> headersDynamic = new ArrayList<>();
+        sheet.getRow(5).forEach(cell -> {
+            if (cell.getColumnIndex() > 13) {
+                headersDynamic.add(excelComponent.formatParseString(sheet.getRow(5).getCell(cell.getColumnIndex())));
+            }
+        });
+        return headersDynamic;
+    }
+
+    private List<PayrollFileData> setPayrollFileDataDto(final XSSFSheet sheet, List<String> headersDynamic) {
         List<PayrollFileData> listOrder = new ArrayList<>();
         IntStream.range(6, sheet.getPhysicalNumberOfRows() + 3).mapToObj(sheet::getRow).forEach(rowListContributor -> {
             PayrollFileData order = new PayrollFileData();
@@ -115,15 +133,44 @@ public class PayrollServiceImpl {
             order.setPosition(excelComponent.formatParseString(rowListContributor.getCell(4)));
             order.setYear(excelComponent.formatParseInteger(rowListContributor.getCell(5)));
             order.setMonth(excelComponent.formatParseInteger(rowListContributor.getCell(6)));
-            order.setSalary(excelComponent.formatParseInteger(rowListContributor.getCell(7)));
+            order.setSalary(excelComponent.formatParseFloat(rowListContributor.getCell(7)));
             order.setWorkedDays(excelComponent.formatParseInteger(rowListContributor.getCell(8)));
             order.setDaysOfDisability(excelComponent.formatParseInteger(rowListContributor.getCell(9)));
             order.setLeaveDays(excelComponent.formatParseInteger(rowListContributor.getCell(10)));
             order.setTotalDays(excelComponent.formatParseInteger(rowListContributor.getCell(11)));
             order.setDateOfAdmission(excelComponent.formatParseDate(rowListContributor.getCell(12)));
+            if (!headersDynamic.isEmpty()) {
+                order.setDynamicData(setPayrollFileDynamicDto(rowListContributor, headersDynamic));
+            }
             listOrder.add(order);
         });
         return listOrder;
+    }
+
+
+    private PayrollFileDynamic setPayrollFileDynamicDto(final XSSFRow sheet, final List<String> headersDynamic) {
+        String[] headersDynamicList = {"SUELDOBASICO", "APOYO", "HORAEXTRADIURNA", "HORAEXTRAFA",
+                "COMISIONES", "VACACIONES", "VACACIONESOBLIGATORIAS", "AJAPORINS", "BONODERETIRO", "COMPENSACION",
+                "INCAPACIDAD"};
+        PayrollFileDynamic dynamic = new PayrollFileDynamic();
+        try {
+            for (String header : headersDynamic) {
+                final int index = Arrays.asList(headersDynamicList).indexOf(header.replaceAll("\\s+", "").toUpperCase());
+                if (index != -1) {
+                    Field field = dynamic.getClass().getDeclaredFields()[index];
+                    field.setAccessible(true);
+                    try {
+                        field.set(dynamic, excelComponent.formatParseFloat(sheet.getCell(headersDynamic.indexOf(header) + 14)));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        return dynamic;
     }
 
     @Transactional(rollbackOn = {Payroll.class})
@@ -144,7 +191,7 @@ public class PayrollServiceImpl {
     @Transactional(rollbackOn = {PayrollData.class})
     Optional<PayrollData> createPayrollData(Payroll payroll, Contributor contributor,
                                             String position, Date collaboratorDate,
-                                            Integer salary, Integer workedDays,
+                                            Float salary, Integer workedDays,
                                             Integer daysOfDisability, Integer leaveDays,
                                             Integer totalDays, Date dateOfAdmission) {
         PayrollData payrollData = new PayrollData();
@@ -169,6 +216,23 @@ public class PayrollServiceImpl {
             contributor = contributorRepository.save(new Contributor(typeDocumentOptional.get(), documentNumber, name.toUpperCase()));
         }
         return contributor;
+    }
+
+    @Transactional(rollbackOn = {PayrollDynamic.class})
+    Optional<PayrollDynamic> createPayrollDynamic(PayrollData payrollData, PayrollFileDynamic payrollFileDynamic) {
+        PayrollDynamic payrollDynamic = new PayrollDynamic();
+        for (Field field : payrollFileDynamic.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            try {
+                field.set(payrollDynamic, field.get(payrollFileDynamic));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        payrollDynamic.setPayrollData(payrollData);
+        System.out.println(payrollDynamic);
+
+        return payrollDynamicRepository.save(payrollDynamic);
     }
 
 }

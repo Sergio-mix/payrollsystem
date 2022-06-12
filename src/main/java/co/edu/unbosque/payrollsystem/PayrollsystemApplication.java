@@ -1,5 +1,6 @@
 package co.edu.unbosque.payrollsystem;
 
+import co.edu.unbosque.payrollsystem.dto.PayrollFileDynamic;
 import co.edu.unbosque.payrollsystem.model.Authority;
 import co.edu.unbosque.payrollsystem.model.CountryCode;
 import co.edu.unbosque.payrollsystem.model.TypeDocument;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.Field;
 import java.util.List;
 
 @SpringBootApplication

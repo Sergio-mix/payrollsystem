@@ -135,6 +135,8 @@ const InfoFile = (props) => {
 
     useEffect(() => {
         // @ts-ignore
+        listHeaders(data);
+        // @ts-ignore
         listHeaders(data.headersData);
         // @ts-ignore
         listItemsData(data.payrollFileData != null ? data.payrollFileData : []);

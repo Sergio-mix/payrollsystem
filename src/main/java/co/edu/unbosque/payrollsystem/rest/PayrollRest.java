@@ -51,6 +51,7 @@ public class PayrollRest {
         } catch (NullPointerException e) {
             response = new ResponseEntity<>(ReplyMessage.FORMAT_NOT_VALID, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             response = new ResponseEntity<>(ReplyMessage.ERROR_505, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
