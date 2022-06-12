@@ -7,6 +7,8 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -235,14 +237,18 @@ public class PayrollValidationServiceImpl {
         String result = null;
         String sb;
         if (headersDynamic != null) {
-            sb = headersValidateList(headersDynamic, headersDynamicList);
-            if (sb != null) {
-                result = "The headers data is not valid please verify that it follows the format already established.\n " + sb;
+            StringBuilder stB = new StringBuilder();
+            for (String s : headersDynamic) {
+                if (!Arrays.asList(headersDynamicList).contains(validation.removeAccents(s.replaceAll("\\s+", "")).toUpperCase())) {
+                    stB.append("(").append(s).append(") ").append("does not match the format, ");
+                }
             }
-        } else {
-            result = "The headers data is required";
-        }
+            sb = stB.toString().isEmpty() ? null : stB.toString();
 
+            if (sb != null) {
+                result = "The headers data is not valid please verify that it follows the format already established.\n " + stB;
+            }
+        }
         return result != null ? new ValidateError("headersDataDynamic", result) : null;
     }
 

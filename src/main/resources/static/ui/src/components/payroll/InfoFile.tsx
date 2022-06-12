@@ -69,6 +69,20 @@ const InfoFile = (props) => {
             {item: "dateOfAdmission"},
         ];
 
+        const jsonData2 = [
+            {item: "minimumWage"},
+            {item: "support"},
+            {item: "overtimeHour"},
+            {item: "overtimeHourFa"},
+            {item: "commissions"},
+            {item: "holidays"},
+            {item: "requiredHoliday"},
+            {item: "ajAporIns"},
+            {item: "withdrawalBonus"},
+            {item: "compensation"},
+            {item: "inability"},
+        ];
+
         useEffect(() => {
             return () => {
                 jsonData.map((item, index) => {
@@ -224,12 +238,11 @@ const InfoFile = (props) => {
                         <table
                             className={"table align-items-center"}>
                             <thead>
+                            <div>
+                                <p className={"text-color-aux ms-1 font-size-18"}>{searchProblemsSize(data, ["headersData", "headersDataDynamic"])} </p>
+                            </div>
                             <tr onClick={() =>
-                                searchProblems(data, ["headersData", "headersDataDynamic"])
-                            }>
-                                <div>
-                                    <p className={"text-color-aux ms-1 font-size-18"}>{searchProblemsSize(data, ["headersData", "headersDataDynamic"])} </p>
-                                </div>
+                                searchProblems(data, ["headersData", "headersDataDynamic"])}>
                                 {headersData}
                             </tr>
                             {itemsData}

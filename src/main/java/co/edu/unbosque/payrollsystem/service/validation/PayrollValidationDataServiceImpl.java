@@ -32,7 +32,9 @@ public class PayrollValidationDataServiceImpl extends PayrollValidationServiceIm
         errors.add(validateRequest(payroll.getRequest()));
         errors.add(validateHeaders(payroll.getHeaders()));//TODO: headers info
         errors.add(validateHeadersData(payroll.getHeadersData()));//TODO: headers data
-        errors.add(validateHeadersDynamic(payroll.getHeadersDataDynamic()));//TODO: headers dynamic
+        if (!payrollFile.getHeadersDataDynamic().isEmpty()) {
+            errors.add(validateHeadersDynamic(payroll.getHeadersDataDynamic()));//TODO: headers dynamic
+        }
         errors.removeIf(Objects::isNull);
         payroll.setValidateErrors(errors);
 
@@ -82,7 +84,9 @@ public class PayrollValidationDataServiceImpl extends PayrollValidationServiceIm
         errors.add(validateDaysOfDisability);
         errors.add(validateLeaveDays);
         errors.add(validateDateOfAdmission(payrollFileData.getDateOfAdmission()));
-        errors.addAll(validatePayrollDynamic(payrollFileData.getDynamicData()));//TODO: validatePayrollDynamic
+        if (payrollFileData.getDynamicData() != null) {
+            errors.addAll(validatePayrollDynamic(payrollFileData.getDynamicData()));//TODO: validatePayrollDynamic
+        }
         errors.removeIf(Objects::isNull);
 
         return errors;

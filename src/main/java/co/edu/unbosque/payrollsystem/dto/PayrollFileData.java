@@ -23,7 +23,7 @@ public class PayrollFileData {
     private Integer totalDays;
     @Temporal(TemporalType.DATE)
     private Date dateOfAdmission;
-    private PayrollFileDynamic dynamicData;
+    private PayrollFileDynamic dynamicData = null;
 
     private List<ValidateError> validateErrors;
 }

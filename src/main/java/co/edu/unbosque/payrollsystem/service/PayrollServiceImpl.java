@@ -68,8 +68,13 @@ public class PayrollServiceImpl {
             for (PayrollFileData data : payrollFileData) {
                 Optional<Contributor> contributor = creteContributor(data.getNameOfTheContributor(), data.getTypeDocument(), data.getDocumentNumber().toString());
                 Optional<PayrollData> payrollData = createPayrollData(payroll.get(), contributor.get(), data);
-                Optional<PayrollDynamic> payrollDynamic = createPayrollDynamic(payrollData.get(), data.getDynamicData());
-                payrollData.get().setPayrollDynamic(payrollDynamic.get());
+                if (data.getDynamicData() != null) {
+                    Optional<PayrollDynamic> payrollDynamic = createPayrollDynamic(payrollData.get(), data.getDynamicData());
+                    payrollData.get().setPayrollDynamic(payrollDynamic.get());
+                }else{
+                    payrollData.get().setPayrollDynamic(null);
+                }
+
                 listPayrollData.add(payrollDataRepository.save(payrollData.get()).get());
             }
 
@@ -117,6 +122,7 @@ public class PayrollServiceImpl {
                 headersDynamic.add(excelComponent.formatParseString(sheet.getRow(5).getCell(cell.getColumnIndex())));
             }
         });
+        headersDynamic.removeIf(String::isEmpty);
         return headersDynamic;
     }
 
@@ -137,9 +143,7 @@ public class PayrollServiceImpl {
             order.setLeaveDays(excelComponent.formatParseInteger(rowListContributor.getCell(10)));
             order.setTotalDays(excelComponent.formatParseInteger(rowListContributor.getCell(11)));
             order.setDateOfAdmission(excelComponent.formatParseDate(rowListContributor.getCell(12)));
-            if (!headersDynamic.isEmpty()) {
-                order.setDynamicData(setPayrollFileDynamicDto(rowListContributor, headersDynamic));
-            }
+            order.setDynamicData(!headersDynamic.isEmpty() ? setPayrollFileDynamicDto(rowListContributor, headersDynamic) : null);
             listOrder.add(order);
         });
         return listOrder;
