@@ -5,7 +5,7 @@ import {
     AiOutlineFileExcel
 } from "react-icons/all";
 import {savePayroll} from "../../services/payrollService";
-import {NavLink, Route, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {
     AiFillFileExcel,
     AiFillLock,
@@ -42,7 +42,7 @@ const ProcessFiles = (props) => {
 
         const detailInconsistent = () => {
             props.modal.open(
-                <div className={"div-content-scroll mh-600 text-justify"}>
+                <div className={"div-content-scroll row mh-500 text-justify mb-2"}>
                     <InfoFile data={response.data}/>
                 </div>
             );
@@ -144,18 +144,18 @@ const ProcessFiles = (props) => {
                         response.status !== null ?
                             response.status === 200
                                 ? <AiOutlineCheck onClick={handleClick200}
-                                                  className={"text-color-green cursor-pointer transition-3s transform-scale-1-3"}/>
+                                                  className={"text-color-green cursor-pointer transition-2s transform-scale-1-3"}/>
                                 : response.status === 400
                                     ? <AiFillWarning onClick={handleClick400}
-                                                     className={"text-color-yellow cursor-pointer transition-3s transform-scale-1-3"}/>
+                                                     className={"text-color-yellow cursor-pointer transition-2s transform-scale-1-3"}/>
                                     : response.status === 500
                                         ? <AiOutlineClose onClick={handleClick500}
-                                                          className={"text-color-red cursor-pointer transition-3s transform-scale-1-3"}/>
+                                                          className={"text-color-red cursor-pointer transition-2s transform-scale-1-3"}/>
                                         : response.status === 401
                                             ? <AiFillLock onClick={handleClick401}
-                                                          className={"text-color-grey cursor-pointer transition-3s transform-scale-1-3"}/>
+                                                          className={"text-color-grey cursor-pointer transition-2s transform-scale-1-3"}/>
                                             : <AiOutlineClose onClick={handleClick500}
-                                                              className={"text-color-red cursor-pointer transition-3s transform-scale-1-3"}/>
+                                                              className={"text-color-red cursor-pointer transition-2s transform-scale-1-3"}/>
                             : <span className="spinner-border font-size-14 text-color-grey"/>}
                     </div>
                 </div>

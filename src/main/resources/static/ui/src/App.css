@@ -87,7 +87,7 @@ body {
 .form-main {
     max-width: 100%;
     color: #000000;
-    background-color: var(--second-color);
+    background-color: var(--second-color) ;
 }
 
 .form-login {
@@ -188,6 +188,10 @@ width:auto;
 
 .transition-3s {
     transition: all 0.3s ease;
+}
+
+.transition-2s {
+    transition: all 0.2s ease;
 }
 
 .btn {

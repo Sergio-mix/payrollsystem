@@ -30,7 +30,7 @@ public class PayrollDynamic implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"payrollDynamic", "state"})
     @JoinColumn(name = "fk_payroll_data", nullable = false, referencedColumnName = "id")
     private PayrollData payrollData;

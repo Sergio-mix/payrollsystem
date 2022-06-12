@@ -2,6 +2,7 @@ package co.edu.unbosque.payrollsystem.service.validation;
 
 import co.edu.unbosque.payrollsystem.dto.PayrollFile;
 import co.edu.unbosque.payrollsystem.dto.PayrollFileData;
+import co.edu.unbosque.payrollsystem.dto.PayrollFileDynamic;
 import co.edu.unbosque.payrollsystem.dto.ValidateError;
 import co.edu.unbosque.payrollsystem.exception.PayrollException;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,9 @@ public class PayrollValidationDataServiceImpl extends PayrollValidationServiceIm
         errors.add(validateBusinessName(payroll.getBusinessName()));
         errors.add(validateReference(payroll.getReference()));
         errors.add(validateRequest(payroll.getRequest()));
-        errors.add(validateHeaders(payroll.getHeaders()));
-        errors.add(validateHeadersData(payroll.getHeadersData()));
+        errors.add(validateHeaders(payroll.getHeaders()));//TODO: headers info
+        errors.add(validateHeadersData(payroll.getHeadersData()));//TODO: headers data
+        errors.add(validateHeadersDynamic(payroll.getHeadersDataDynamic()));//TODO: headers dynamic
         errors.removeIf(Objects::isNull);
         payroll.setValidateErrors(errors);
 
@@ -52,7 +54,6 @@ public class PayrollValidationDataServiceImpl extends PayrollValidationServiceIm
                 listError.add(data);
             }
         }
-
         return listError;
     }
 
@@ -81,8 +82,28 @@ public class PayrollValidationDataServiceImpl extends PayrollValidationServiceIm
         errors.add(validateDaysOfDisability);
         errors.add(validateLeaveDays);
         errors.add(validateDateOfAdmission(payrollFileData.getDateOfAdmission()));
+        errors.addAll(validatePayrollDynamic(payrollFileData.getDynamicData()));//TODO: validatePayrollDynamic
         errors.removeIf(Objects::isNull);
 
+        return errors;
+    }
+
+    private List<ValidateError> validatePayrollDynamic(final PayrollFileDynamic payrollFileDynamic) {
+        List<ValidateError> errors = new ArrayList<>();
+
+        errors.add(validateMinimumWage(payrollFileDynamic.getMinimumWage()));
+        errors.add(validateSupport(payrollFileDynamic.getSupport()));
+        errors.add(validateOvertimeHour(payrollFileDynamic.getOvertimeHour()));
+        errors.add(validateOvertimeHourFa(payrollFileDynamic.getOvertimeHourFa()));
+        errors.add(validateCommissions(payrollFileDynamic.getCommissions()));
+        errors.add(validateHolidays(payrollFileDynamic.getHolidays()));
+        errors.add(validateRequiredHoliday(payrollFileDynamic.getRequiredHoliday()));
+        errors.add(validateAjAporIns(payrollFileDynamic.getAjAporIns()));
+        errors.add(validateWithdrawalBonus(payrollFileDynamic.getWithdrawalBonus()));
+        errors.add(validateCompensation(payrollFileDynamic.getCompensation()));
+        errors.add(validateInability(payrollFileDynamic.getInability()));
+
+        errors.removeIf(Objects::isNull);
         return errors;
     }
 }

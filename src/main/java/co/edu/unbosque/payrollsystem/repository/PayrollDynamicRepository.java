@@ -1,7 +1,5 @@
 package co.edu.unbosque.payrollsystem.repository;
 
-import co.edu.unbosque.payrollsystem.model.Payroll;
-import co.edu.unbosque.payrollsystem.model.PayrollData;
 import co.edu.unbosque.payrollsystem.model.PayrollDynamic;
 import co.edu.unbosque.payrollsystem.repository.jpa.PayrollDynamicJpa;
 import lombok.Data;

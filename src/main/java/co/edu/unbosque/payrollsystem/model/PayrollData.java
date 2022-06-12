@@ -36,7 +36,7 @@ public class PayrollData implements Serializable {
     @JoinColumn(name = "fk_payroll", nullable = false, referencedColumnName = "id")
     private Payroll payroll;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"payrollData", "state"})
     @JoinColumn(name = "fk_payroll_dynamic", referencedColumnName = "id")
     private PayrollDynamic payrollDynamic;

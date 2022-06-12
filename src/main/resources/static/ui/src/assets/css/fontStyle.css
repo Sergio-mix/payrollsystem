@@ -207,6 +207,10 @@
     max-height: 350px !important;
 }
 
+.mh-450 {
+    max-height: 450px !important;
+}
+
 .mh-500 {
     max-height: 500px !important;
 }

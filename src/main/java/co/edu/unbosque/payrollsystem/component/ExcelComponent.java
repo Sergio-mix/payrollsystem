@@ -32,6 +32,10 @@ public class ExcelComponent {
         return value.isEmpty() ? null : validation.isNumber(value) ? Float.parseFloat(value) : null;
     }
 
+    public Float formatParseFloatV2(XSSFCell object) {
+        return formatParseFloat(object) == null ? 0F : formatParseFloat(object);
+    }
+
     public Date formatParseDate(XSSFCell object) {
         DataFormatter dataFormatter = new DataFormatter();
         String value = dataFormatter.formatCellValue(object).trim();

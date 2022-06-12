@@ -7,7 +7,7 @@ const InfoFile = (props) => {
     const [headersData, setHeadersData] = useState(null);
     const [itemsData, setItemsData] = useState(null);
     const [problems, setProblems] = useState([]);
-    let [cont, setCont] = useState(0);
+    let [cont, setCont] = useState("(o)");
 
     const searchProblemsData = (item) => {
         let problems = [];
@@ -20,7 +20,7 @@ const InfoFile = (props) => {
     const searchProblems = (item, attribute) => {
         let problems = [];
         item.validateErrors.filter(item => {
-            if (item.attribute === attribute) {
+            if (attribute.indexOf(item.attribute) !== -1) {
                 problems.push(item);
             }
         });
@@ -30,11 +30,12 @@ const InfoFile = (props) => {
     const searchProblemsSize = (item, attribute) => {
         let problems = 0;
         item.validateErrors.filter(item => {
-            if (item.attribute === attribute) {
+            if (attribute.indexOf(item.attribute) !== -1) {
                 problems++;
             }
         });
-        return problems;
+        let message = "(" + problems + ")"
+        return problems > 0 ? message : null;
     }
 
     function ItemHerderData(props) {
@@ -72,9 +73,11 @@ const InfoFile = (props) => {
             return () => {
                 jsonData.map((item, index) => {
                     let value = props.data[item.item];
+
                     list.push(
                         <td className={"cursor-pointer font-size-16"} onClick={() => props.event(props.data)}>
-                            {value != null && value != "" ? value : <p className={"text-color-yellow"}>###</p>}
+                            {value != null && value != "" || value == 0 ? value :
+                                <p className={"text-color-yellow"}>###</p>}
                         </td>
                     );
                 })
@@ -103,7 +106,8 @@ const InfoFile = (props) => {
 
         return (
             <Fragment>
-                <h2 className={"font-size-20"}>- {formatTitle(props.data.attribute)}</h2>
+                <h2 className={"font-size-20"}><span
+                    className={"text-color-aux"}>- </span>{formatTitle(props.data.attribute)}</h2>
                 <p className={"font-size-18"}>{props.data.message}</p>
             </Fragment>
         )
@@ -134,11 +138,8 @@ const InfoFile = (props) => {
     }
 
     useEffect(() => {
-        // @ts-ignore
-        listHeaders(data);
-        // @ts-ignore
-        listHeaders(data.headersData);
-        // @ts-ignore
+        console.log(data);
+        listHeaders([...data.headersData, ...data.headersDataDynamic]);
         listItemsData(data.payrollFileData != null ? data.payrollFileData : []);
 
         let n = 0;
@@ -146,13 +147,14 @@ const InfoFile = (props) => {
             data.payrollFileData.map(item => {
                 n += item.validateErrors.length
             });
-            setCont(n);
+            let message = "(" + n + ")"
+            setCont(n > 0 ? message : null);
         }
     }, []);
 
     return (
         <Fragment>
-            <div className={"form-table mb-2 effect-main"}>
+            <div className={"form-table effect-main"}>
                 <div className={"d-flex justify-content-center mb-4"}>
                     <h1>Payroll inconsistencies</h1>
                 </div>
@@ -160,53 +162,53 @@ const InfoFile = (props) => {
                     className={"table-responsive p-2 align-items-center bg-color border-radius-main box-shadow-main"}>
                     <ul className={"d-flex font-size-20 justify-content-between text-center"}>
                         <li className={"d-flex flex-column cursor-pointer box-shadow-hover border-radius-main p-2"}
-                            onClick={() => searchProblems(data, "typeDocument")}>
+                            onClick={() => searchProblems(data, ["typeDocument"])}>
                             <div className={"d-flex"}>
                                 <span className={"font-size-20"}>TIPO DE DOCUMENTO</span>
-                                <p className={"text-color-aux ms-1 font-size-16"}>({searchProblemsSize(data, "typeDocument")})</p>
+                                <p className={"text-color-aux ms-1 font-size-16"}>{searchProblemsSize(data, ["typeDocument"])}</p>
                             </div>
                             <span
-                                className={"font-size-18"}>{data.typeDocument != null && data.typeDocument != "" ? data.typeDocument :
+                                className={"font-size-18"}>{data.typeDocument != null && data.typeDocument != "" || data.typeDocument == 0 ? data.typeDocument :
                                 <p className={"text-color-aux"}>###</p>}</span>
                         </li>
                         <li className={"d-flex flex-column cursor-pointer box-shadow-hover border-radius-main p-2"}
-                            onClick={() => searchProblems(data, "documentNumber")}>
+                            onClick={() => searchProblems(data, ["documentNumber"])}>
                             <div className={"d-flex"}>
                                 <span className={"font-size-20"}>NUMERO</span>
-                                <p className={"text-color-aux ms-1 font-size-16"}>({searchProblemsSize(data, "documentNumber")})</p>
+                                <p className={"text-color-aux ms-1 font-size-16"}>{searchProblemsSize(data, ["documentNumber"])}</p>
                             </div>
                             <span
-                                className={"font-size-18"}>{data.documentNumber != null && data.documentNumber != "" ? data.documentNumber :
+                                className={"font-size-18"}>{data.documentNumber != null && data.documentNumber != "" || data.documentNumber == 0 ? data.documentNumber :
                                 <p className={"text-color-aux"}>###</p>}</span>
                         </li>
                         <li className={"d-flex flex-column cursor-pointer box-shadow-hover border-radius-main p-2"}
-                            onClick={() => searchProblems(data, "businessName")}>
+                            onClick={() => searchProblems(data, ["businessName"])}>
                             <div className={"d-flex"}>
                                 <span className={"font-size-20"}>RAZON SOCIAL</span>
-                                <p className={"text-color-aux ms-1 font-size-16"}>({searchProblemsSize(data, "businessName")})</p>
+                                <p className={"text-color-aux ms-1 font-size-16"}>{searchProblemsSize(data, ["businessName"])}</p>
                             </div>
                             <span
-                                className={"font-size-18"}>{data.businessName != null && data.businessName != "" ? data.businessName :
+                                className={"font-size-18"}>{data.businessName != null && data.businessName != "" || data.businessName == 0 ? data.businessName :
                                 <p className={"text-color-aux"}>###</p>}</span>
                         </li>
                         <li className={"d-flex flex-column cursor-pointer box-shadow-hover border-radius-main p-2"}
-                            onClick={() => searchProblems(data, "reference")}>
+                            onClick={() => searchProblems(data, ["reference"])}>
                             <div className={"d-flex"}>
                                 <span className={"font-size-20"}>REFERENCIA</span>
-                                <p className={"text-color-aux ms-1 font-size-16"}>({searchProblemsSize(data, "reference")})</p>
+                                <p className={"text-color-aux ms-1 font-size-16"}>{searchProblemsSize(data, ["reference"])}</p>
                             </div>
                             <span
-                                className={"font-size-18"}>{data.reference != null && data.reference != "" ? data.reference :
+                                className={"font-size-18"}>{data.reference != null && data.reference != "" || data.reference == 0 ? data.reference :
                                 <p className={"text-color-aux"}>###</p>}</span>
                         </li>
                         <li className={"d-flex flex-column cursor-pointer box-shadow-hover border-radius-main p-2"}
-                            onClick={() => searchProblems(data, "request")}>
+                            onClick={() => searchProblems(data, ["request"])}>
                             <div className={"d-flex"}>
                                 <span className={"font-size-20"}>SOLICITUD</span>
-                                <p className={"text-color-aux ms-1 font-size-16"}>({searchProblemsSize(data, "request")})</p>
+                                <p className={"text-color-aux ms-1 font-size-16"}>{searchProblemsSize(data, ["request"])}</p>
                             </div>
                             <span
-                                className={"font-size-18"}>{data.request != null && data.request != "" ? data.request :
+                                className={"font-size-18"}>{data.request != null && data.request != "" || data.request == 0 ? data.request :
                                 <p className={"text-color-aux"}>###</p>}</span>
 
                         </li>
@@ -216,17 +218,18 @@ const InfoFile = (props) => {
                     <div
                         className="table-responsive p-0 form-main form-first border-radius-main box-shadow-main p-5 div-content-scroll mh-500">
                         <h2>Data: <span
-                            className={"font-size-30"}>{data.payrollFileData != null ? data.payrollFileData.length : 0}</span>
-                            <span className={"text-color-aux ms-1 font-size-18"}>({cont})</span>
+                            className={"font-size-25"}>{data.payrollFileData != null ? data.payrollFileData.length : 0}</span>
+                            <span className={"text-color-aux ms-1 font-size-18"}>{cont}</span>
                         </h2>
-
                         <table
                             className={"table align-items-center"}>
                             <thead>
-                            <div>
-                                <p className={"text-color-aux ms-1 font-size-18"}>({searchProblemsSize(data, "headersData")})</p>
-                            </div>
-                            <tr onClick={() => searchProblems(data, "headersData")}>
+                            <tr onClick={() =>
+                                searchProblems(data, ["headersData", "headersDataDynamic"])
+                            }>
+                                <div>
+                                    <p className={"text-color-aux ms-1 font-size-18"}>{searchProblemsSize(data, ["headersData", "headersDataDynamic"])} </p>
+                                </div>
                                 {headersData}
                             </tr>
                             {itemsData}
@@ -234,7 +237,7 @@ const InfoFile = (props) => {
                         </table>
                     </div>
                     <div className={"form-main form-aux box-shadow-main border-radius-main div-content-scroll mh-350"}>
-                        <h2>Inconsistencies: <span className={"font-size-30"}>{problems.length}</span></h2>
+                        <h2>Inconsistencies</h2>
                         {problems}
                     </div>
                 </div>

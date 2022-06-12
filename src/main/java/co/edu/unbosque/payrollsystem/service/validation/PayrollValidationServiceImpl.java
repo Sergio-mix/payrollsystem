@@ -20,13 +20,11 @@ public class PayrollValidationServiceImpl {
     private ValidationComponent validation;
     @Autowired
     private TypeDocumentRepository typeDocument;
-    String[] headersList = {"TIPODEDOCUMENTO", "NUMERO", "RAZONSOCIAL", "REFERENCIA", "SOLICITUD"};
-    String[] headersDataList = {"ORDEN", "TIPODOCUMENTO", "NUMERO", "NOMBRECOTIZANTE", "CARGO", "ANO", "MES",
+    public String[] headersList = {"TIPODEDOCUMENTO", "NUMERO", "RAZONSOCIAL", "REFERENCIA", "SOLICITUD"};
+    public String[] headersDataList = {"ORDEN", "TIPODOCUMENTO", "NUMERO", "NOMBRECOTIZANTE", "CARGO", "ANO", "MES",
             "SALARIO", "DIASTRABAJADOS", "DIASINCAPACIDAD", "DIASLICENCIA", "TOTALDIAS", "FECHADEINGRESO"};
-
-    String[] headersDynamicList = {"SUELDOBASICO", "APOYO", "HORAEXTRADIURNA", "HORAEXTRAFA",
-            "COMISIONES", "VACACIONES", "VACACIONESOBLIGATORIAS", "AJAPORINS", "BONODERETIRO", "COMPENSACION",
-            "INCAPACIDAD"};
+    public String[] headersDynamicList = {"SUELDOBASICO", "APOYO", "HORAEXTRADIURNA", "HORAEXTRAFA", "COMISIONES",
+            "VACACIONES", "VACACIONESOBLIGATORIAS", "AJAPORINS", "BONODERETIRO", "COMPENSACION", "INCAPACIDAD"};
 
     public ValidateError validateTypeDocument(final String documentType) {
         final var attribute = "typeDocument";
@@ -229,8 +227,123 @@ public class PayrollValidationServiceImpl {
     public ValidateError validateDateOfAdmission(final Date dateOfAdmission) {
         final var attribute = "dateOfAdmission";
         return dateOfAdmission == null
-                ? new ValidateError(attribute, "La fecha de ingreso no es válida, debe ser de formato dd/mm/yyyy")
+                ? new ValidateError(attribute, "The date of entry is not valid, it must be in the format dd/mm/yyyy")
                 : null;
     }
+
+    public ValidateError validateHeadersDynamic(final List<String> headersDynamic) {
+        String result = null;
+        String sb;
+        if (headersDynamic != null) {
+            sb = headersValidateList(headersDynamic, headersDynamicList);
+            if (sb != null) {
+                result = "The headers data is not valid please verify that it follows the format already established.\n " + sb;
+            }
+        } else {
+            result = "The headers data is required";
+        }
+
+        return result != null ? new ValidateError("headersDataDynamic", result) : null;
+    }
+
+    public ValidateError validateMinimumWage(final Float minimumWage) {
+        final var attribute = "minimumWage";
+        return minimumWage == null
+                ? new ValidateError(attribute, "The minimum wage is invalid it must be a number")
+                : minimumWage < 0
+                ? new ValidateError(attribute, "The minimum wage cannot be negative")
+                : null;
+    }
+
+    public ValidateError validateSupport(final Float support) {
+        final var attribute = "support";
+        return support == null
+                ? new ValidateError(attribute, "The support is invalid it must be a number")
+                : support < 0
+                ? new ValidateError(attribute, "The support cannot be negative")
+                : null;
+    }
+
+    public ValidateError validateOvertimeHour(final Float overtimeHour) {
+        final var attribute = "overtimeHour";
+        return overtimeHour == null
+                ? new ValidateError(attribute, "The overtime hour is invalid it must be a number")
+                : overtimeHour < 0
+                ? new ValidateError(attribute, "The overtime hour cannot be negative")
+                : null;
+    }
+
+    public ValidateError validateOvertimeHourFa(final Float overtimeHourFa) {
+        final var attribute = "overtimeHourFa";
+        return overtimeHourFa == null
+                ? new ValidateError(attribute, "the overtime hourFa is invalid it must be a number")
+                : overtimeHourFa < 0
+                ? new ValidateError(attribute, "the overtime hourFa cannot be negative")
+                : null;
+    }
+
+    public ValidateError validateCommissions(final Float commissions) {
+        final var attribute = "commissions";
+        return commissions == null
+                ? new ValidateError(attribute, "The commissions is invalid it must be a number")
+                : commissions < 0
+                ? new ValidateError(attribute, "The commissions cannot be negative")
+                : null;
+    }
+
+    public ValidateError validateHolidays(final Float holidays) {
+        final var attribute = "holidays";
+        return holidays == null
+                ? new ValidateError(attribute, "The holidays is invalid it must be a number")
+                : holidays < 0
+                ? new ValidateError(attribute, "The holidays cannot be negative")
+                : null;
+    }
+
+    public ValidateError validateRequiredHoliday(final Float requiredHoliday) {
+        final var attribute = "requiredHoliday";
+        return requiredHoliday == null
+                ? new ValidateError(attribute, "The required holiday is invalid it must be a number")
+                : requiredHoliday < 0
+                ? new ValidateError(attribute, "The required holiday cannot be negative")
+                : null;
+    }
+
+    public ValidateError validateAjAporIns(final Float ajAporIns) {
+        final var attribute = "ajAporIns";
+        return ajAporIns == null
+                ? new ValidateError(attribute, "The aj aporIns is invalid it must be a number")
+                : ajAporIns < 0
+                ? new ValidateError(attribute, "The aj aporIns cannot be negative")
+                : null;
+    }
+
+    public ValidateError validateWithdrawalBonus(final Float withdrawalBonus) {
+        final var attribute = "withdrawalBonus";
+        return withdrawalBonus == null
+                ? new ValidateError(attribute, "The withdrawal bonus is invalid it must be a number")
+                : withdrawalBonus < 0
+                ? new ValidateError(attribute, "The withdrawal bonus cannot be negative")
+                : null;
+    }
+
+    public ValidateError validateCompensation(final Float compensation) {
+        final var attribute = "compensation";
+        return compensation == null
+                ? new ValidateError(attribute, "The compensation is invalid it must be a number")
+                : compensation < 0
+                ? new ValidateError(attribute, "The compensation cannot be negative")
+                : null;
+    }
+
+    public ValidateError validateInability(final Float inability) {
+        final var attribute = "inability";
+        return inability == null
+                ? new ValidateError(attribute, "The inability is invalid it must be a number")
+                : inability < 0
+                ? new ValidateError(attribute, "The inability cannot be negative")
+                : null;
+    }
+
 
 }
