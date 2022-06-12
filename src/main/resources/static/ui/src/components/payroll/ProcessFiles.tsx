@@ -13,7 +13,7 @@ import {
     AiOutlineCaretLeft,
     AiOutlineMenuUnfold
 } from "react-icons/ai";
-import InfoFile from "../../pages/payroll/InfoFile";
+import InfoFile from "./InfoFile";
 
 const ProcessFiles = (props) => {
     const navigate = useNavigate();
@@ -41,8 +41,11 @@ const ProcessFiles = (props) => {
         }
 
         const detailInconsistent = () => {
-            navigate("/dashboard/payroll/inconsistent",
-                {state: {data: response.data}});
+            props.modal.open(
+                <div className={"div-content-scroll mh-600 text-justify"}>
+                    <InfoFile data={response.data}/>
+                </div>
+            );
         }
 
         const handleClick200 = () => {

@@ -2,6 +2,7 @@
     background: #f0f3f6;
 }
 
+
 .bg-first-color {
     background: var(--first-color);
 }
@@ -150,6 +151,10 @@
     text-align: center;
 }
 
+.text-justify {
+    text-align: justify;
+}
+
 .margin-5 {
     margin: 5% auto;
 }
@@ -200,6 +205,14 @@
 
 .mh-350 {
     max-height: 350px !important;
+}
+
+.mh-500 {
+    max-height: 500px !important;
+}
+
+.mh-600 {
+    max-height: 600px !important;
 }
 
 .mh-250 {

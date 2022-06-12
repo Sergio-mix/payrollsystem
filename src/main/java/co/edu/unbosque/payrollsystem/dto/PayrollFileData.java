@@ -2,6 +2,8 @@ package co.edu.unbosque.payrollsystem.dto;
 
 import lombok.Data;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class PayrollFileData {
     private Integer daysOfDisability;
     private Integer leaveDays;
     private Integer totalDays;
+    @Temporal(TemporalType.DATE)
     private Date dateOfAdmission;
 
     private List<ValidateError> validateErrors;

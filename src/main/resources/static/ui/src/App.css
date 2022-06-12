@@ -64,6 +64,12 @@ body {
     transition: all 0.1s ease;
 }
 
+.box-shadow-hover-aux:hover {
+    background-color: var(--aux-color);
+    color: var(--second-color);
+    box-shadow: 0 4px 7px -1px rgb(0 0 0 / 11%), 0 2px 4px -1px rgb(0 0 0 / 7%);
+}
+
 .border-radius-main {
     border-radius: 8px;
     border: #eee;
@@ -175,7 +181,6 @@ width:auto;
 
 .div-content-scroll {
     overflow: auto;
-    overflow-x: hidden;
     overflow-anchor: none;
     -ms-overflow-style: none;
     padding: 2rem 1rem;

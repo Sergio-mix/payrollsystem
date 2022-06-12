@@ -14,7 +14,7 @@ import Error500 from "./pages/error/Error500";
 import {Fragment} from "react";
 import RecoverPasswordCode from "./pages/auth/RecoverPasswordCode";
 import RecoverPasswordUsername from "./pages/auth/RecoverPasswordUsername";
-import InfoFile from "./pages/payroll/InfoFile";
+import InfoFile from "./components/payroll/InfoFile";
 
 function App() {
 
@@ -27,7 +27,6 @@ function App() {
                     <Route exact path="/recover-password" element={<RecoverPasswordUsername/>}/>
                     <Route exact path="/recover-password/:id/:email" element={<RecoverPasswordCode/>}/>
                     <Route path="/dashboard" element={<Dashboard/>}/>
-                    <Route path="/dashboard/payroll/inconsistent" element={<InfoFile/>}/>
                     <Route exact path="/500" element={<Error500/>}/>
                     <Route exact path="*" element={<Error404/>}/>
                 </Routes>

@@ -43,7 +43,7 @@ public class PayrollValidationServiceImpl {
     }
 
     public ValidateError validateDocumentCompany(final String documentType, final Integer documentNumber) {
-        final var attribute = "documentCompany";
+        final var attribute = "documentNumber";
         return payroll.existsPayroll(documentType.toUpperCase(), String.valueOf(documentNumber))
                 ? new ValidateError(attribute, "The document is already registered")
                 : null;
@@ -81,7 +81,7 @@ public class PayrollValidationServiceImpl {
         for (int i = 0; i < headers.size(); i++) {
             if (!validation.isNullOrEmpty(headers.get(i))) {
                 if (!headersList[i].equals(validation.removeAccents(headers.get(i).replaceAll("\\s+", "")).toUpperCase())) {
-                    sb.append(headers.get(i)).append(", ");
+                    sb.append("(").append(headers.get(i)).append(")").append("does not match the format, ");
                 }
             } else {
                 sb.append(headers.get(i) == null ? "not valid" : headersList[i] + " it is required").append(", ");
@@ -122,7 +122,7 @@ public class PayrollValidationServiceImpl {
             }
 
             if (sb != null) {
-                result = "The headers data is not valid: " + sb + " verify that it follows the format already established.";
+                result = "The headers data is not valid please verify that it follows the format already established.\n " + sb;
             }
         } else {
             result = "The headers data is required";

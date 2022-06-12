@@ -24,7 +24,7 @@
     z-index: 999;
     background-color: var(--second-color);
     min-width: 600px;
-    max-width: 1000%;
+    max-width: 100%;
     padding: 3rem 2rem;
 }
 
@@ -40,4 +40,10 @@
 .btn-close-modal-hovel:hover {
     background-color: var(--detail-color);
     color: var(--second-color);
+}
+
+@media (max-width: 950px) {
+    .modal-v1 {
+        padding: 3rem 5rem;
+    }
 }
