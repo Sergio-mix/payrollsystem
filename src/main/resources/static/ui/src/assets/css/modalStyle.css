@@ -24,7 +24,7 @@
     z-index: 999;
     background-color: var(--second-color);
     min-width: 600px;
-    max-width: 90%;
+    max-width: 1000%;
     padding: 3rem 2rem;
 }
 

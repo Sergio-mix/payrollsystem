@@ -5,7 +5,7 @@ import {
     AiOutlineFileExcel
 } from "react-icons/all";
 import {savePayroll} from "../../services/payrollService";
-import {BrowserRouter, useNavigate} from "react-router-dom";
+import {NavLink, Route, useNavigate} from "react-router-dom";
 import {
     AiFillFileExcel,
     AiFillLock,
@@ -41,11 +41,8 @@ const ProcessFiles = (props) => {
         }
 
         const detailInconsistent = () => {
-            navigate("/file/inconsistencies", {
-                state: {
-                    data: response.data,
-                }
-            });
+            navigate("/dashboard/payroll/inconsistent",
+                {state: {data: response.data}});
         }
 
         const handleClick200 = () => {
@@ -97,7 +94,7 @@ const ProcessFiles = (props) => {
                         onClick={() => props.modal.close()}>Close
                     </button>
                     <button onClick={detailInconsistent}
-                        className={"btn-2 transition-3s bg-aux-color bg-aux-hover-color box-shadow-main-2 border-radius-main w-35 ms-2 me-2"}>See
+                            className={"btn-2 transition-3s bg-aux-color bg-aux-hover-color box-shadow-main-2 border-radius-main w-35 ms-2 me-2"}>See
                         in detail
                     </button>
                 </div>
@@ -183,18 +180,19 @@ const ProcessFiles = (props) => {
     }, []);
 
     return (
-        <div className={"form-main form-first box-shadow-main border-radius-main mb-5 effect-main"}>
-            <h1 className={"text-center"}>Process payroll</h1>
-            <div className={"row"}>
-                <p className={"font-size-18 text-color-grey mb-2 text-center"}>We are processing payroll please
-                    don't
-                    leave the page</p>
-                {items}
-                <div className={"mt-5 text-center"}>
+        <Fragment>
+            <div className={"form-main form-first box-shadow-main border-radius-main mb-5 effect-main"}>
+                <h1 className={"text-center"}>Process payroll</h1>
+                <div className={"row"}>
+                    <p className={"font-size-18 text-color-grey mb-2 text-center"}>We are processing payroll please
+                        don't
+                        leave the page</p>
+                    {items}
+                    <div className={"mt-5 text-center"}>
                     <span
                         className={"font-size-18 text-color-grey "}>Processed {contNum} files of {props.list.length}</span>
-                </div>
-                <div className={"mt-4"}>
+                    </div>
+                    <div className={"mt-4"}>
                     <span onClick={() => {
                         contNum === props.list.length ? props.exit() : props.modal.open(<div>
                             <h1>❕</h1>
@@ -203,9 +201,10 @@ const ProcessFiles = (props) => {
                     }}
                           className={"font-size-18 text-color-grey-hover-aux cursor-pointer"}>
                 <AiOutlineCaretLeft/> back</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </Fragment>
     )
 }
 export default ProcessFiles;

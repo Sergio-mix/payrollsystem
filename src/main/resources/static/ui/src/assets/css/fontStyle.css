@@ -194,6 +194,10 @@
     margin-top: 7% !important;
 }
 
+.mh-100 {
+    max-height: 70vh !important;
+}
+
 .mh-350 {
     max-height: 350px !important;
 }

@@ -169,6 +169,10 @@ body {
     align-items: center;
 }
 
+.div-modal-100{
+width:auto;
+}
+
 .div-content-scroll {
     overflow: auto;
     overflow-x: hidden;
