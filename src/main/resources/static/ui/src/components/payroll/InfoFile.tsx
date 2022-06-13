@@ -3,7 +3,6 @@ import {Fragment, useEffect, useState} from "react"
 const InfoFile = (props) => {
     // @ts-ignore
     const [data, setData] = useState(props.data);
-    const [infoFile, setInfoFile] = useState(null);
     const [headersData, setHeadersData] = useState(null);
     const [itemsData, setItemsData] = useState(null);
     const [problems, setProblems] = useState([]);
@@ -23,9 +22,6 @@ const InfoFile = (props) => {
         {item: "leaveDays"},
         {item: "totalDays"},
         {item: "dateOfAdmission"},
-    ];
-
-    const jsonData2 = [
         {item: "minimumWage"},
         {item: "support"},
         {item: "overtimeHour"},
@@ -83,12 +79,13 @@ const InfoFile = (props) => {
         const [subItems, setSubItems] = useState([]);
         let list = [];
 
+        // @ts-ignore
+        let data = Object.assign({}, props.data, props.data.dynamicData);
 
         useEffect(() => {
             return () => {
                 props.json.map((item, index) => {
-                    let value = props.data[item.item];
-
+                    let value = data[item.item];
                     list.push(
                         <td className={"cursor-pointer font-size-16"} onClick={() => props.event(props.data)}>
                             {value != null && value != "" || value == 0 ? value :

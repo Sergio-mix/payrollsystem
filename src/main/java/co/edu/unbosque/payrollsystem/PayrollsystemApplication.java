@@ -63,6 +63,11 @@ public class PayrollsystemApplication {
             authority2.setDescription("ROLE_USER");
             authority2.setRoleCode(Authority.USER);
 
+            Authority authority3 = new Authority();
+            authority3.setId(3);
+            authority3.setDescription("ROLE_COORDINAROR");
+            authority3.setRoleCode(Authority.COORDINAROR);
+
             user1.setAuthorities(List.of(authority1, authority2));
 
             System.out.println(userServiceImpl.saveUser(user1));

@@ -77,7 +77,7 @@ const Dashboard = () => {
 
     const load = async (id) => await userId(id); //user by id
 
-    let admin = [
+    const admin = [
         {
             icon: <AiOutlineBarChart/>,
             text: "Statistics",
@@ -95,7 +95,16 @@ const Dashboard = () => {
         }
     ];
 
-    let user = [
+    const coordinator = [
+        {
+            icon: <SiMicrosoftexcel/>,
+            text: "PayrollFile",
+            component: <PayrollFiles modal={modal}/>
+        }
+    ];
+
+
+    const user = [
         {
             icon: <SiMicrosoftexcel/>,
             text: "PayrollFile",
