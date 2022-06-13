@@ -163,7 +163,7 @@ const InfoFile = (props) => {
 
     return (
         <Fragment>
-            <div className={"form-table effect-main"}>
+            <div className={"form-second effect-main"}>
                 <div className={"d-flex justify-content-center mb-4"}>
                     <h1>Payroll inconsistencies</h1>
                 </div>

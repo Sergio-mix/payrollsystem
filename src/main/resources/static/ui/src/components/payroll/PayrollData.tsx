@@ -4,6 +4,7 @@ import {MDBDataTableV5} from "mdbreact";
 import {getPayrollAll, getPayrollDataByPayrollId} from "../../services/payrollService";
 import {AiOutlineException} from "react-icons/all";
 import {AiFillLock} from "react-icons/ai";
+import PayrollPreview from "./PayrollPreview";
 
 const PayrollData = (props) => {
     const navigate = useNavigate();
@@ -95,14 +96,14 @@ const PayrollData = (props) => {
     }
 
     // @ts-ignore
-    const openPayrollData = async (payrollId) => {
-        props.modal.open(load);
-        const response = await getPayrollDataById(payrollId);
+    const openPayrollData = async (payroll) => {
+        props.modal.openIsCloseNot(load);
+        const response = await getPayrollDataById(payroll.id);
         switch (response.status) {
             case 200:
                 props.modal.open(
                     <div className={"div-content-scroll row mh-500 text-justify mb-2"}>
-                        <h1>{response.status}</h1>
+                        <PayrollPreview data={response.data} payroll={payroll}/>
                     </div>
                 );
                 break;
@@ -124,7 +125,7 @@ const PayrollData = (props) => {
                         reference: payroll.reference,
                         request: payroll.request,
                         businessName: payroll.businessName,
-                        PayrollData: <button onClick={() => openPayrollData(payroll.id)}
+                        PayrollData: <button onClick={() => openPayrollData(payroll)}
                                              className="btn-2 bg-color box-shadow-main-2 text-color-grey border-radius-main">
                             <AiOutlineException className={"font-size-25"}/></button>,
                         date: formatDate(payroll.date),
