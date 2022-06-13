@@ -94,7 +94,6 @@ public class PayrollValidationDataServiceImpl extends PayrollValidationServiceIm
 
     private List<ValidateError> validatePayrollDynamic(final PayrollFileDynamic payrollFileDynamic) {
         List<ValidateError> errors = new ArrayList<>();
-
         errors.add(validateMinimumWage(payrollFileDynamic.getMinimumWage()));
         errors.add(validateSupport(payrollFileDynamic.getSupport()));
         errors.add(validateOvertimeHour(payrollFileDynamic.getOvertimeHour()));

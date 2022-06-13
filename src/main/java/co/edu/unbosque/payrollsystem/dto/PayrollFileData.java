@@ -21,9 +21,8 @@ public class PayrollFileData {
     private Integer daysOfDisability;
     private Integer leaveDays;
     private Integer totalDays;
-    @Temporal(TemporalType.DATE)
     private Date dateOfAdmission;
-    private PayrollFileDynamic dynamicData = null;
+    private PayrollFileDynamic dynamicData;
 
     private List<ValidateError> validateErrors;
 }

@@ -9,6 +9,36 @@ const InfoFile = (props) => {
     const [problems, setProblems] = useState([]);
     let [cont, setCont] = useState("(o)");
 
+    const jsonData = [
+        {item: "order"},
+        {item: "typeDocument"},
+        {item: "documentNumber"},
+        {item: "nameOfTheContributor"},
+        {item: "position"},
+        {item: "year"},
+        {item: "month"},
+        {item: "salary"},
+        {item: "workedDays"},
+        {item: "daysOfDisability"},
+        {item: "leaveDays"},
+        {item: "totalDays"},
+        {item: "dateOfAdmission"},
+    ];
+
+    const jsonData2 = [
+        {item: "minimumWage"},
+        {item: "support"},
+        {item: "overtimeHour"},
+        {item: "overtimeHourFa"},
+        {item: "commissions"},
+        {item: "holidays"},
+        {item: "requiredHoliday"},
+        {item: "ajAporIns"},
+        {item: "withdrawalBonus"},
+        {item: "compensation"},
+        {item: "inability"},
+    ];
+
     const searchProblemsData = (item) => {
         let problems = [];
         item.validateErrors.filter(item => {
@@ -53,39 +83,10 @@ const InfoFile = (props) => {
         const [subItems, setSubItems] = useState([]);
         let list = [];
 
-        const jsonData = [
-            {item: "order"},
-            {item: "typeDocument"},
-            {item: "documentNumber"},
-            {item: "nameOfTheContributor"},
-            {item: "position"},
-            {item: "year"},
-            {item: "month"},
-            {item: "salary"},
-            {item: "workedDays"},
-            {item: "daysOfDisability"},
-            {item: "leaveDays"},
-            {item: "totalDays"},
-            {item: "dateOfAdmission"},
-        ];
-
-        const jsonData2 = [
-            {item: "minimumWage"},
-            {item: "support"},
-            {item: "overtimeHour"},
-            {item: "overtimeHourFa"},
-            {item: "commissions"},
-            {item: "holidays"},
-            {item: "requiredHoliday"},
-            {item: "ajAporIns"},
-            {item: "withdrawalBonus"},
-            {item: "compensation"},
-            {item: "inability"},
-        ];
 
         useEffect(() => {
             return () => {
-                jsonData.map((item, index) => {
+                props.json.map((item, index) => {
                     let value = props.data[item.item];
 
                     list.push(
@@ -135,10 +136,10 @@ const InfoFile = (props) => {
         setHeadersData(items);
     }
 
-    const listItemsData = (data) => {
+    const listItemsData = (data, json) => {
         let items = [];
         data.map((item, index) => {
-            items.push(<ItemData data={item} key={index} event={searchProblemsData}/>)
+            items.push(<ItemData data={item} json={json} key={index} event={searchProblemsData}/>)
         })
         setItemsData(items);
     }
@@ -152,9 +153,8 @@ const InfoFile = (props) => {
     }
 
     useEffect(() => {
-        console.log(data);
         listHeaders([...data.headersData, ...data.headersDataDynamic]);
-        listItemsData(data.payrollFileData != null ? data.payrollFileData : []);
+        listItemsData(data.payrollFileData != null ? data.payrollFileData : [], jsonData);
 
         let n = 0;
         if (data.payrollFileData !== null) {

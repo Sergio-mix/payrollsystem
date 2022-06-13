@@ -74,7 +74,6 @@ public class PayrollServiceImpl {
                 }else{
                     payrollData.get().setPayrollDynamic(null);
                 }
-
                 listPayrollData.add(payrollDataRepository.save(payrollData.get()).get());
             }
 
