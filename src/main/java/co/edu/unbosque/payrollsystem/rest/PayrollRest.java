@@ -12,11 +12,13 @@ import org.apache.xmlbeans.XMLStreamValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @RestController(value = "PayrollRest")
@@ -30,6 +32,7 @@ public class PayrollRest {
     @Autowired
     private UserHistoryServiceImpl userHistoryServiceImpl;
 
+    @Async
     @PostMapping(value = "/save")
     public ResponseEntity<?> addPayrollFile(@RequestBody MultipartFile file, Principal userLogin, HttpServletRequest request) {
         ResponseEntity<?> response;
@@ -50,6 +53,40 @@ public class PayrollRest {
             response = new ResponseEntity<>(e.getPayrollFile(), HttpStatus.BAD_REQUEST);
         } catch (NullPointerException e) {
             response = new ResponseEntity<>(ReplyMessage.FORMAT_NOT_VALID, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            response = new ResponseEntity<>(ReplyMessage.ERROR_505, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
+
+    @GetMapping(value = "/all")
+    public ResponseEntity<?> getAllPayrolls(Principal userLogin, HttpServletRequest request) {
+        ResponseEntity<?> response;
+        try {
+            Optional<List<Payroll>> List = payrollService.getPayrolls();
+            if (List.isEmpty()) {
+                response = new ResponseEntity<>(ReplyMessage.ERROR_505, HttpStatus.INTERNAL_SERVER_ERROR);
+            } else {
+                response = List.get().isEmpty() ? new ResponseEntity<>(List, HttpStatus.NO_CONTENT) : new ResponseEntity<>(List, HttpStatus.OK);
+                userHistoryServiceImpl.save(userLogin.getName(), new Record(Record.GET, "list payroll"), null, request);//Save record
+            }
+        } catch (Exception e) {
+            response = new ResponseEntity<>(ReplyMessage.ERROR_505, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return response;
+    }
+
+    @GetMapping(value = "/data/{id}")
+    public ResponseEntity<?> getPayrollDataByPayrollId(@PathVariable("id") Integer payrollId, Principal userLogin, HttpServletRequest request) {
+        ResponseEntity<?> response;
+        try {
+            Optional<List<PayrollData>> list = payrollService.getPayrollDataByPayrollId(payrollId);
+            if (list.isEmpty()) {
+                response = new ResponseEntity<>(ReplyMessage.ERROR_505, HttpStatus.INTERNAL_SERVER_ERROR);
+            } else {
+                response = list.get().isEmpty() ? new ResponseEntity<>(list, HttpStatus.NO_CONTENT) : new ResponseEntity<>(list, HttpStatus.OK);
+                userHistoryServiceImpl.save(userLogin.getName(), new Record(Record.GET, "list payroll data by payroll"), null, request);//Save record
+            }
         } catch (Exception e) {
             response = new ResponseEntity<>(ReplyMessage.ERROR_505, HttpStatus.INTERNAL_SERVER_ERROR);
         }

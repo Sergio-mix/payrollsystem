@@ -112,8 +112,8 @@ const ProcessFiles = (props) => {
         }
 
         // @ts-ignore
-        const query = (file) => {
-            savePayroll(file).then(response => {
+        const query = async (file) => {
+            await savePayroll(file).then(response => {
                 setResponse(response);
                 props.cont();
             }).catch(error => {
@@ -123,9 +123,7 @@ const ProcessFiles = (props) => {
         };
 
         useEffect(() => {
-            return () => {
-                query(props.file);
-            }
+            query(props.file).then(r => null);
         }, []);
 
 
@@ -176,10 +174,8 @@ const ProcessFiles = (props) => {
     }
 
     useEffect(() => {
-        return () => {
-            document.title = "Process file | Payroll";
-            setItems(listItems(props.list));
-        }
+        document.title = "Process file | Payroll";
+        setItems(listItems(props.list));
     }, []);
 
     return (

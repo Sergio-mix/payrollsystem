@@ -83,7 +83,6 @@ const InfoFile = (props) => {
         let data = Object.assign({}, props.data, props.data.dynamicData);
 
         useEffect(() => {
-            return () => {
                 props.json.map((item, index) => {
                     let value = data[item.item];
                     list.push(
@@ -94,7 +93,6 @@ const InfoFile = (props) => {
                     );
                 })
                 setSubItems(list);
-            }
         }, []);
         return (
             <Fragment>

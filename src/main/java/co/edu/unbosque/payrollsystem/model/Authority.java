@@ -22,7 +22,7 @@ public class Authority implements Serializable, GrantedAuthority {
     private static final long serialVersionUID = 12342340L;
     public final static String ADMIN = "ADMIN";
     public final static String USER = "USER";
-    public final static String COORDINAROR = "COORDINAROR";
+    public final static String MANAGER = "MANAGER";
     public static final String ACTIVE = "A";
 
     public static final String INACTIVE = "I";

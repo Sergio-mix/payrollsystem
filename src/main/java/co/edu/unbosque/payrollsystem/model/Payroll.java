@@ -50,8 +50,8 @@ public class Payroll implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"payroll"})
     @JoinTable(name = "fk_payroll_data", joinColumns = @JoinColumn(referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
     private List<PayrollData> payrollData;
 

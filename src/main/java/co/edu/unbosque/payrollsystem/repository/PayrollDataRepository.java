@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Data
@@ -17,5 +18,9 @@ public class PayrollDataRepository {
 
     public Optional<PayrollData> save(PayrollData payrollData) {
         return Optional.of(payrollDataJpa.save(payrollData));
+    }
+
+    public Optional<List<PayrollData>> findByPayrollId(Integer payrollId) {
+        return Optional.ofNullable(payrollDataJpa.findByPayrollId(payrollId));
     }
 }

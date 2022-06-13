@@ -225,4 +225,12 @@ public class PayrollServiceImpl {
         return payrollDynamicRepository.save(payrollDynamic);
     }
 
+    public Optional<List<Payroll>> getPayrolls() {
+        return payrollValidation.getPayroll().getAll();
+    }
+
+    public Optional<List<PayrollData>> getPayrollDataByPayrollId(Integer payrollId) {
+        return payrollDataRepository.findByPayrollId(payrollId);
+    }
+
 }

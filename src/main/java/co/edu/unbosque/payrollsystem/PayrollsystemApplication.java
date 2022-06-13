@@ -65,10 +65,10 @@ public class PayrollsystemApplication {
 
             Authority authority3 = new Authority();
             authority3.setId(3);
-            authority3.setDescription("ROLE_COORDINAROR");
-            authority3.setRoleCode(Authority.COORDINAROR);
+            authority3.setDescription("ROLE_MANAGER");
+            authority3.setRoleCode(Authority.MANAGER);
 
-            user1.setAuthorities(List.of(authority1, authority2));
+            user1.setAuthorities(List.of(authority1, authority2,authority3));
 
             System.out.println(userServiceImpl.saveUser(user1));
         } catch (Exception e) {

@@ -1,7 +1,7 @@
 import {useState, useEffect, Fragment} from "react";
 import {useLocation, useNavigate} from 'react-router-dom';
 import Menu from "../../components/menu/Menu";
-import {AiOutlineBarChart, AiOutlineTeam, AiOutlineCalendar, AiFillLock} from "react-icons/ai";
+import {AiOutlineBarChart, AiOutlineTeam, AiOutlineCalendar, AiFillLock, AiOutlineTable} from "react-icons/ai";
 import {SiMicrosoftexcel} from "react-icons/si";
 import {MdCloudCircle} from "react-icons/md";
 import Users from "../../components/users/Users";
@@ -11,6 +11,7 @@ import ChargingPad from "../../components/util/ChargingPad";
 import Modal from "../../components/util/Modal";
 import Statistics from "../../components/statistics/Statistics";
 import PayrollFiles from "../../components/payroll/PayrollFiles";
+import PayrollData from "../../components/payroll/PayrollData";
 
 
 /**
@@ -95,11 +96,11 @@ const Dashboard = () => {
         }
     ];
 
-    const coordinator = [
+    const manager = [
         {
-            icon: <SiMicrosoftexcel/>,
-            text: "PayrollFile",
-            component: <PayrollFiles modal={modal}/>
+            icon: <AiOutlineTable/>,
+            text: "Payroll Data",
+            component: <PayrollData modal={modal}/>
         }
     ];
 
@@ -127,6 +128,12 @@ const Dashboard = () => {
 
         if (authorities.find(authority => authority.roleCode === "ADMIN") !== undefined) {
             admin.forEach(value => {
+                aux.push(value);
+            });
+        }
+
+        if (authorities.find(authority => authority.roleCode === "MANAGER") !== undefined) {
+            manager.forEach(value => {
                 aux.push(value);
             });
         }

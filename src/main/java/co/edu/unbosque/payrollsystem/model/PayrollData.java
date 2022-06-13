@@ -32,7 +32,7 @@ public class PayrollData implements Serializable {
     private Integer id;
 
     @ManyToOne
-    @JsonIgnoreProperties({"payrollData", "state"})
+    @JsonIgnore
     @JoinColumn(name = "fk_payroll", nullable = false, referencedColumnName = "id")
     private Payroll payroll;
 
