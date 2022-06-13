@@ -42,7 +42,7 @@ const ProcessFiles = (props) => {
 
         const detailInconsistent = () => {
             props.modal.open(
-                <div className={"div-content-scroll row mh-500 text-justify mb-2"}>
+                <div className={"div-content-scroll  mh-500 text-justify mb-2"}>
                     <InfoFile data={response.data}/>
                 </div>
             );

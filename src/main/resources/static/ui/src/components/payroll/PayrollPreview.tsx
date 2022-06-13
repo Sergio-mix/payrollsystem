@@ -111,13 +111,15 @@ const PayrollPreview = (props) => {
     };
 
     const dataTable = (data) => {
+        let list = [];
         data.map((item) => {
             item["documentNumberContributor"] = item.contributor.documentNumber;
             item["nameContributor"] = item.contributor.nameOfTheContributor;
+            // @ts-ignore
+            list.push(Object.assign({}, item, item.payrollDynamic));
         });
 
-        // @ts-ignore
-        json["rows"] = Object.assign({}, data, data.payrollDynamic);
+        json["rows"] = list;
 
         setContent(
             <MDBDataTableV5
@@ -125,7 +127,8 @@ const PayrollPreview = (props) => {
                 data={json}
                 entriesOptions={[5, 10]}
                 entries={5}
-                searching={false}
+                searchTop
+                searchBottom={false}
                 responsive
                 hover
             />
@@ -181,9 +184,11 @@ const PayrollPreview = (props) => {
                         </li>
                     </ul>
                 </nav>
-                <div className="mt-4 form-main box-shadow-main border-radius-main p-4">
-                    <h2>Data</h2>
-                    {content}
+                <div className={"center"}>
+                    <div className="mt-4 form-main box-shadow-main border-radius-main p-4">
+                        <h2>Data</h2>
+                        {content}
+                    </div>
                 </div>
             </div>
         </Fragment>

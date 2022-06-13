@@ -102,7 +102,7 @@ const PayrollData = (props) => {
         switch (response.status) {
             case 200:
                 props.modal.open(
-                    <div className={"div-content-scroll row mh-500 text-justify mb-2"}>
+                    <div className={"div-content-scroll mh-500 text-justify mb-2"}>
                         <PayrollPreview data={response.data} payroll={payroll}/>
                     </div>
                 );
