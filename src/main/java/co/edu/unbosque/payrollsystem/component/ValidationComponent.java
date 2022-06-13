@@ -98,18 +98,42 @@ public class ValidationComponent {
         return count >= n;
     }
 
+    /**
+     * Is string boolean.
+     *
+     * @param str the value
+     * @return is string true or false
+     */
     public boolean isString(final Object str) {
         return str instanceof String;
     }
 
-    public boolean isNumber(final Object str) {
-        return !(str instanceof Number);
+    /**
+     * Is number boolean.
+     *
+     * @param str the value
+     * @return the validate error
+     */
+    public boolean isNumber(final String str) {
+        return Arrays.stream(str.split("\\s+")).allMatch(s -> s.matches("\\d*"));
     }
 
+    /**
+     * Is date boolean.
+     *
+     * @param str the value
+     * @return the validate error
+     */
     public boolean isDate(final Object str) {
         return !(str instanceof Date);
     }
 
+    /**
+     * remove Accents
+     *
+     * @param str the value
+     * @return the validate error
+     */
     public String removeAccents(final String str) {
         final String ORIGINAL = "ÁáÉéÍíÓóÚúÑñÜü";
         final String REPLACEMENT = "AaEeIiOoUuNnUu";

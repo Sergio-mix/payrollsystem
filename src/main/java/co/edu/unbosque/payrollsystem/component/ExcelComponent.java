@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.zip.DataFormatException;
 
 @Component(value = "ExcelComponent")
 public class ExcelComponent {
@@ -15,32 +16,52 @@ public class ExcelComponent {
 
 
     public String formatParseString(XSSFCell object) {
+        try{
         DataFormatter dataFormatter = new DataFormatter();
         String value = dataFormatter.formatCellValue(object).trim();
         return value.isEmpty() ? "" : validation.isString(value) ? value : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public Integer formatParseInteger(XSSFCell object) {
-        DataFormatter dataFormatter = new DataFormatter();
-        String value = dataFormatter.formatCellValue(object).trim();
-        return value.isEmpty() ? null : validation.isNumber(value) ? Integer.parseInt(value) : null;
+        try {
+            DataFormatter dataFormatter = new DataFormatter();
+            String value = dataFormatter.formatCellValue(object).trim();
+            return value.isEmpty() ? null : validation.isNumber(value) ? Integer.parseInt(value) : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public Float formatParseFloat(XSSFCell object) {
-        DataFormatter dataFormatter = new DataFormatter();
-        String value = dataFormatter.formatCellValue(object).trim();
-        return value.isEmpty() ? null : validation.isNumber(value) ? Float.parseFloat(value) : null;
+        try {
+            DataFormatter dataFormatter = new DataFormatter();
+            String value = dataFormatter.formatCellValue(object).trim();
+            return value.isEmpty() ? null : validation.isNumber(value) ? Float.parseFloat(value) : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public Float formatParseFloatV2(XSSFCell object) {
-        DataFormatter dataFormatter = new DataFormatter();
-        String value = dataFormatter.formatCellValue(object).trim();
-        return value.isEmpty() ? 0 : validation.isNumber(value) ? Float.parseFloat(value) : null;
+        try {
+            DataFormatter dataFormatter = new DataFormatter();
+            String value = dataFormatter.formatCellValue(object).trim();
+            return value.isEmpty() ? 0 : validation.isNumber(value) ? Float.parseFloat(value) : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public Date formatParseDate(XSSFCell object) {
-        DataFormatter dataFormatter = new DataFormatter();
-        String value = dataFormatter.formatCellValue(object).trim();
-        return value.isEmpty() ? null : validation.isDate(value) ? new Date(value) : null;
+        try {
+            DataFormatter dataFormatter = new DataFormatter();
+            String value = dataFormatter.formatCellValue(object).trim();
+            return value.isEmpty() ? null : validation.isDate(value) ? new Date(value) : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

@@ -71,7 +71,7 @@ public class PayrollServiceImpl {
                 if (data.getDynamicData() != null) {
                     Optional<PayrollDynamic> payrollDynamic = createPayrollDynamic(payrollData.get(), data.getDynamicData());
                     payrollData.get().setPayrollDynamic(payrollDynamic.get());
-                }else{
+                } else {
                     payrollData.get().setPayrollDynamic(null);
                 }
                 listPayrollData.add(payrollDataRepository.save(payrollData.get()).get());
