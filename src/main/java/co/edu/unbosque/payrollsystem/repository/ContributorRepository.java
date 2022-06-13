@@ -23,4 +23,7 @@ public class ContributorRepository {
     public Optional<Contributor> existsContributor(TypeDocument type, String number) {
         return Optional.ofNullable(contributorJpa.findByTypeDocumentAndDocumentNumber(type, number));
     }
+    public Integer countAll() {
+        return contributorJpa.countAllByState(Contributor.ACTIVE);
+    }
 }

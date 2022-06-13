@@ -82,7 +82,7 @@ const Dashboard = () => {
         {
             icon: <AiOutlineBarChart/>,
             text: "Statistics",
-            component: <Statistics/>
+            component: <Statistics modal={modal}/>
         },
         {
             icon: <AiOutlineTeam/>,

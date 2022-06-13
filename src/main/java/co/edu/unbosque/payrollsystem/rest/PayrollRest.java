@@ -7,8 +7,6 @@ import co.edu.unbosque.payrollsystem.model.PayrollData;
 import co.edu.unbosque.payrollsystem.model.Record;
 import co.edu.unbosque.payrollsystem.service.PayrollServiceImpl;
 import co.edu.unbosque.payrollsystem.service.UserHistoryServiceImpl;
-import org.apache.poi.xssf.binary.XSSFBParseException;
-import org.apache.xmlbeans.XMLStreamValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @RestController(value = "PayrollRest")
 @RequestMapping(value = "/payroll/api/v1")
@@ -91,5 +90,53 @@ public class PayrollRest {
             response = new ResponseEntity<>(ReplyMessage.ERROR_505, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
+    }
+
+    @Async
+    @GetMapping(value = "/cont-contributors")
+    public CompletableFuture<ResponseEntity<?>> getContContributors(Principal userLogin, HttpServletRequest request) {
+        ResponseEntity<?> response;
+        try {
+            Integer cont = payrollService.getContContributor();
+            response = new ResponseEntity<>(cont, HttpStatus.OK);
+            userHistoryServiceImpl.save(
+                    userLogin.getName(), new Record(Record.GET, "number of contributors"),
+                    null, request);//Save record
+        } catch (Exception e) {
+            response = new ResponseEntity<>(ReplyMessage.ERROR_505, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return CompletableFuture.completedFuture(response);
+    }
+
+    @Async
+    @GetMapping(value = "/cont-payrolls")
+    public CompletableFuture<ResponseEntity<?>> getContPayroll(Principal userLogin, HttpServletRequest request) {
+        ResponseEntity<?> response;
+        try {
+            Integer cont = payrollService.getContPayroll();
+            response = new ResponseEntity<>(cont, HttpStatus.OK);
+            userHistoryServiceImpl.save(
+                    userLogin.getName(), new Record(Record.GET, "number of payrolls"),
+                    null, request);//Save record
+        } catch (Exception e) {
+            response = new ResponseEntity<>(ReplyMessage.ERROR_505, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return CompletableFuture.completedFuture(response);
+    }
+
+    @Async
+    @GetMapping(value = "/avg-salary")
+    public CompletableFuture<ResponseEntity<?>> getAvgSalary(Principal userLogin, HttpServletRequest request) {
+        ResponseEntity<?> response;
+        try {
+            Float avg = payrollService.getAvgSalary();
+            response = new ResponseEntity<>(avg, HttpStatus.OK);
+            userHistoryServiceImpl.save(
+                    userLogin.getName(), new Record(Record.GET, "average salary"),
+                    null, request);//Save record
+        } catch (Exception e) {
+            response = new ResponseEntity<>(ReplyMessage.ERROR_505, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return CompletableFuture.completedFuture(response);
     }
 }

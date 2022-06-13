@@ -26,3 +26,27 @@ export const getPayrollDataByPayrollId = async (id: number) => {
         }
     });
 }
+
+export const getNumberContributors = async () => {
+    return http.get(`/payroll/api/v1/cont-contributors`, {
+        headers: {
+            'Authorization': `Bearer ${getToken()}`
+        }
+    });
+}
+
+export const getNumberPayrolls = async () => {
+    return http.get(`/payroll/api/v1/cont-payrolls`, {
+        headers: {
+            'Authorization': `Bearer ${getToken()}`
+        }
+    });
+}
+
+export const getAvgSalary = async () => {
+    return http.get(`/payroll/api/v1/avg-salary`, {
+        headers: {
+            'Authorization': `Bearer ${getToken()}`
+        }
+    });
+}

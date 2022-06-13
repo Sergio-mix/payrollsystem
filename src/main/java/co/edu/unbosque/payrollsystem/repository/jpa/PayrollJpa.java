@@ -16,4 +16,6 @@ public interface PayrollJpa extends JpaRepository<Payroll, Integer> {
     boolean existsByReference(String reference);
     @NotNull
     List<Payroll> findAll();
+
+    Integer countAllByState(String state);
 }

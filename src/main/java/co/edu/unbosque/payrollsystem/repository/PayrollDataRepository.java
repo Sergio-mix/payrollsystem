@@ -23,4 +23,9 @@ public class PayrollDataRepository {
     public Optional<List<PayrollData>> findByPayrollId(Integer payrollId) {
         return Optional.ofNullable(payrollDataJpa.findByPayrollId(payrollId));
     }
+
+    public Float getAvgSalary() {
+        return payrollDataJpa.avgSalary();
+    }
+
 }

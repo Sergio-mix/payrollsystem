@@ -1,10 +1,8 @@
 package co.edu.unbosque.payrollsystem.repository;
 
-import co.edu.unbosque.payrollsystem.model.Contributor;
 import co.edu.unbosque.payrollsystem.model.Payroll;
-import co.edu.unbosque.payrollsystem.model.TypeDocument;
+import co.edu.unbosque.payrollsystem.repository.jpa.PayrollDataJpa;
 import co.edu.unbosque.payrollsystem.repository.jpa.PayrollJpa;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -35,4 +33,9 @@ public class PayrollRepository {
     public boolean existsReference(String reference) {
         return payrollJpa.existsByReference(reference);
     }
+
+    public Integer countAll() {
+        return payrollJpa.countAllByState(Payroll.ACTIVE);
+    }
+
 }

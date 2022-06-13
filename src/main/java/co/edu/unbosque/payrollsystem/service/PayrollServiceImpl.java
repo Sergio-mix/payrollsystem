@@ -233,4 +233,16 @@ public class PayrollServiceImpl {
         return payrollDataRepository.findByPayrollId(payrollId);
     }
 
+    public Integer getContContributor() {
+        return contributorRepository.countAll();
+    }
+
+    public Integer getContPayroll() {
+        return payrollValidation.getPayroll().countAll();
+    }
+
+    public Float getAvgSalary() {
+        return payrollDataRepository.getAvgSalary();
+    }
+
 }
