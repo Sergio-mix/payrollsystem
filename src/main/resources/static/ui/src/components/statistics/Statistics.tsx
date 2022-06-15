@@ -49,7 +49,11 @@ const Statistics = (props) => {
     const [avgSalary, setAvgSalary] = useState(0);
 
     const formatMoney = (cont) => {
-        return cont.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        try {
+            return cont != 0 ? cont.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') : 0;
+        } catch (e) {
+            return cont;
+        }
     }
 
     const error401 = () => {
@@ -174,13 +178,13 @@ const Statistics = (props) => {
             </div>
             {/*<div className="form-main border-radius-main form-first box-shadow-main mb-5 effect-main">*/}
             {/*    <h1>Demo</h1>*/}
-                {/*<Chart*/}
-                {/*    className=""*/}
-                {/*    options={state.options}*/}
-                {/*    series={state.series}*/}
-                {/*    type="bar"*/}
-                {/*    height={"350"}*/}
-                {/*/>*/}
+            {/*<Chart*/}
+            {/*    className=""*/}
+            {/*    options={state.options}*/}
+            {/*    series={state.series}*/}
+            {/*    type="bar"*/}
+            {/*    height={"350"}*/}
+            {/*/>*/}
             {/*</div>*/}
 
             {/*<div className="form-main border-radius-main form-aux box-shadow-main effect-main">*/}
